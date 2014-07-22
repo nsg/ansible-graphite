@@ -1,0 +1,9 @@
+[uwsgi]
+autoload = true
+master = true
+workers = 2
+no-orphans = true
+chmod-socket = 660
+log-date = true
+uid = {{ graphite_user }}
+gid = {{ graphite_user }}

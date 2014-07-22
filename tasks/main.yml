@@ -1,0 +1,78 @@
+---
+
+# Install graphite
+
+- name: Create user
+  user: name={{ graphite_user }} comment="Graphite user" state=present
+
+- include: RedHat.yml
+  when: ansible_os_family == "RedHat"
+
+- include: Debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Setup graphite with pip
+  pip: name={{ item }} state=present
+  with_items:
+    - "https://github.com/graphite-project/ceres/tarball/master"
+    - whisper
+    - carbon
+    - graphite-web
+    - "django==1.5" # Current version of graphite do not support 1.6
+    - django-tagging
+  environment:
+    PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
+  notify: restart carbon-cache
+
+- name: Set perms for graphite storage
+  file: path={{ graphite_install_path }}/storage owner={{ graphite_user }} recurse=yes state=directory
+
+- name: Install webapp settings
+  template: src=local_settings.py.j2 dest={{ graphite_install_path }}/webapp/graphite/local_settings.py
+  notify: restart carbon-cache
+
+- name: Install carbon settings
+  template: src=carbon.conf.j2 dest={{ graphite_install_path }}/conf/carbon.conf
+  notify: restart carbon-cache
+
+- name: Install storage schemas
+  template: src=storage-schemas.conf.j2 dest={{ graphite_install_path }}/conf/storage-schemas.conf
+  notify: restart carbon-cache
+
+- name: Install uwsgi
+  template: src=wsgi.py.j2 dest={{ graphite_install_path }}/conf/wsgi.py
+  notify: restart carbon-cache
+
+- name: Inspect graphite db
+  command: sudo -u {{ graphite_user }} python {{ graphite_install_path }}/webapp/graphite/manage.py inspectdb
+  register: result
+  changed_when: False
+
+- name: Check for secret key warning
+  command: echo SECRET_KEY is set to an unsafe default.
+  failed_when: "'SECRET_KEY' in result.stderr"
+  changed_when: False
+
+- name: Sync/create database
+  command: sudo -u {{ graphite_user }} python {{ graphite_install_path }}/webapp/graphite/manage.py syncdb --noinput
+  when: result.stdout.find("AccountMygraph") == -1
+
+- name: Install database (1/3) Upload import data
+  template: src=dbdump.json.j2 dest=/tmp/graphite_dbdump.json
+  when: result.stdout.find("AccountMygraph") == -1
+  notify: restart carbon-cache
+
+- name: Install database (2/3) Install data
+  command: sudo -u {{ graphite_user }} python {{ graphite_install_path }}/webapp/graphite/manage.py loaddata /tmp/graphite_dbdump.json
+  when: result.stdout.find("AccountMygraph") == -1
+  notify: restart carbon-cache
+
+- name: Install database (3/3) Remove temp file
+  file: path=/tmp/graphite_dbdump.json state=absent
+  when: result.stdout.find("AccountMygraph") == -1
+  notify: restart carbon-cache
+
+- name: Make sure services are running
+  service: name={{ item }} state=started
+  with_items:
+    - carbon-cache

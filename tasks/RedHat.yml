@@ -1,0 +1,43 @@
+---
+
+- name: Install EPEL repository
+  yum: name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+
+- name: Install packages with yum
+  yum: name={{ item }} state=present
+  with_items:
+    - python-pip
+    - python-devel
+    - gcc
+    - cairo-devel
+    - python-twisted
+    - libselinux-python
+    - fontconfig
+
+- name: Use the pip package, version 13
+  pip: name="Twisted==13.0" state=present
+
+- name: Install uwsgi with pip
+  pip: name=uwsgi state=present
+
+- name: Install carbon-cache init.d script
+  template: src=redhat_carbon_service.j2 dest=/etc/init.d/carbon-cache
+  notify: restart carbon-cache
+
+- name: Install uwsgi default settings
+  template: src=redhat_uwsgi_default.ini.j2 dest=/etc/uwsgi_default.ini
+  notify: restart uwsgi
+
+- name: Install uwsgi graphite config
+  template: src=uwsgi_graphite.ini.j2 dest=/etc/uwsgi_graphite.ini
+  notify: restart uwsgi
+
+- name: Install uwsgi init.d script
+  template: src=redhat_uwsgi_service.j2 dest=/etc/init.d/uwsgi
+  notify: restart uwsgi
+
+- name: Check the install scripts perms.
+  file: path=/etc/init.d/{{ item }} mode=0755 owner=root group=root
+  with_items:
+    - carbon-cache
+    - uwsgi

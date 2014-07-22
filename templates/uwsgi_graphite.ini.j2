@@ -1,0 +1,10 @@
+[uwsgi]
+processes = 2
+socket = 127.0.0.1:3031
+gid = {{ graphite_user }}
+uid = {{ graphite_user }}
+chdir = /opt/graphite/conf
+module = wsgi:application
+{% if ansible_os_family == "RedHat" %}
+pidfile = /run/uwsgi/graphite/pid
+{% endif %}
