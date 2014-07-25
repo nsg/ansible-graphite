@@ -11,6 +11,7 @@
     - fontconfig
     - uwsgi
     - uwsgi-plugin-python
+    - sudo
 
 - name: Use the pip package, version 13
   pip: name="Twisted==13.0" state=present

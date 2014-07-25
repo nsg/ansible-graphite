@@ -15,6 +15,7 @@
     - bitmap-fonts-compat
     - libselinux-python
     - fontconfig
+    - sudo
 
 - name: Use the pip package, version 13
   pip: name="Twisted==13.0" state=present
