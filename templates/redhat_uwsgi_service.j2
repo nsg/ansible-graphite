@@ -25,13 +25,15 @@
 RUNAS={{ graphite_user }}
 
 if [ "x$2" != "x2nd" ]; then
+	mkdir -p /run/uwsgi/graphite
+	chown $RUNAS:$RUNAS /run/uwsgi/graphite
+	touch /var/log/uwsgi_graphite.log
+	chown $RUNAS:$RUNAS /var/log/uwsgi_graphite.log
 	sudo -u $RUNAS $0 $1 2nd
-	exit 0
+	exit $?
 fi
 
 start() {
-	mkdir -p /run/uwsgi/graphite
-	chown $RUNAS:$RUNAS /run/uwsgi/graphite
 	/usr/bin/uwsgi --ini /etc/uwsgi_default.ini --ini /etc/uwsgi_graphite.ini --daemonize /var/log/uwsgi_graphite.log
 	RETVAL=$?
 	return $RETVAL
