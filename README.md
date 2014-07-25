@@ -3,8 +3,6 @@ nsg.graphite
 
 This role installs graphite, I choose to install graphite from pip because the packages in the distributions repositories are old and features are missing. I’m using apt/yum when possible.
 
-NOTE: This is mostly tested on debian, it installs and runs on redhat but I have not used it on a redhat system.
-
 Requirements
 ------------
 
