@@ -76,3 +76,4 @@
   service: name={{ item }} state=started
   with_items:
     - carbon-cache
+    - uwsgi
