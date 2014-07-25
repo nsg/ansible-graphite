@@ -7,6 +7,7 @@
     - python-dev
     - libcairo2-dev
     - python-twisted
+    - python-cairo
     - fontconfig
     - uwsgi
     - uwsgi-plugin-python

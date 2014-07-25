@@ -11,6 +11,8 @@
     - gcc
     - cairo-devel
     - python-twisted
+    - pycairo
+    - bitmap-fonts-compat
     - libselinux-python
     - fontconfig
 
