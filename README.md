@@ -39,7 +39,7 @@ Role Variables
 
 The default is "60s:1d" (1 day data), this will keep data for 5 years.
 If you log a lot of data, you may need to restrict this to a shorter time.
-`graphite_storage_schemas_default_retentions`, default: `"10s:14d,1m:90d,30m:1y,1h:5y"`
+* `graphite_storage_schemas_default_retentions`, default: `"10s:14d,1m:90d,30m:1y,1h:5y"`
 
 Example Playbook
 -------------------------
