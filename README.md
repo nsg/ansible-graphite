@@ -29,6 +29,7 @@ Role Variables
 
 * `graphite_user` - The user that carbon and uwsgi is executed as, default: `graphite`
 * `graphite_secret_key` - Change this to a random string, default: `UNSAFE_DEFAULT`
+* `graphite_time_zone` - Select timezone, default: `America/Los_Angeles`
 * `graphite_admin_date_joined`, default: `"2014-07-21T10:11:17.464"`
 * `graphite_admin_email`, default: `"root@localhost"`
 * `graphite_admin_first_name`, default: `""`
