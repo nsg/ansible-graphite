@@ -20,7 +20,7 @@
   template: src=debian_carbon_service.j2 dest=/etc/init.d/carbon-cache
   notify: restart carbon-cache
 
-- name: Check the install scripts perms.
+- name: Check the install scripts perms
   file: path=/etc/init.d/{{ item }} mode=0755 owner=root group=root
   with_items:
     - carbon-cache
