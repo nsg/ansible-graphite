@@ -44,7 +44,8 @@
   notify: restart carbon-cache
 
 - name: Inspect graphite db
-  command: sudo -u {{ graphite_user }} python {{ graphite_install_path }}/webapp/graphite/manage.py inspectdb
+  command: python {{ graphite_install_path }}/webapp/graphite/manage.py inspectdb
+  sudo_user: "{{ graphite_user }}"
   register: result
   changed_when: False
 
@@ -54,23 +55,33 @@
   changed_when: False
 
 - name: Sync/create database
-  command: sudo -u {{ graphite_user }} python {{ graphite_install_path }}/webapp/graphite/manage.py syncdb --noinput
+  command: python {{ graphite_install_path }}/webapp/graphite/manage.py syncdb --noinput
+  sudo_user: "{{ graphite_user }}"
   when: result.stdout.find("AccountMygraph") == -1
 
-- name: Install database (1/3) Upload import data
-  template: src=dbdump.json.j2 dest=/tmp/graphite_dbdump.json
-  when: result.stdout.find("AccountMygraph") == -1
-  notify: restart carbon-cache
+- name: Create superuser account
+  command: python {{ graphite_install_path }}/webapp/graphite/manage.py createsuperuser --username={{ graphite_admin_username }} --email={{ graphite_admin_email }} --noinput
+  sudo_user: "{{ graphite_user }}"
+  register: superuser_created
+  args:
+    creates: "{{ graphite_install_path }}/webapp/graphite/.superuser_created"
 
-- name: Install database (2/3) Install data
-  command: sudo -u {{ graphite_user }} python {{ graphite_install_path }}/webapp/graphite/manage.py loaddata /tmp/graphite_dbdump.json
-  when: result.stdout.find("AccountMygraph") == -1
-  notify: restart carbon-cache
+- name: Prepare to set up superuser password
+  template: src=createsuperuser.py.j2 dest=/tmp/createsuperuser.py
+  when: superuser_created|changed
+  register: debug2
 
-- name: Install database (3/3) Remove temp file
-  file: path=/tmp/graphite_dbdump.json state=absent
-  when: result.stdout.find("AccountMygraph") == -1
-  notify: restart carbon-cache
+- name: Set superuser password
+  shell: "python {{ graphite_install_path }}/webapp/graphite/manage.py shell < /tmp/createsuperuser.py"
+  sudo_user: "{{ graphite_user }}"
+  when: superuser_created|changed
+
+- name: Create lock file
+  file: path="{{ graphite_install_path }}/webapp/graphite/.superuser_created" state=touch
+  when: superuser_created|changed
+
+- name: Remove temp file
+  file: path=/tmp/createsuperuser.py state=absent
 
 - name: Make sure services are running
   service: name={{ item }} state=started

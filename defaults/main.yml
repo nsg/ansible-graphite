@@ -5,12 +5,12 @@ graphite_secret_key: UNSAFE_DEFAULT
 graphite_time_zone: "America/Los_Angeles"
 
 graphite_admin_date_joined: "2014-07-21T10:11:17.464"
-graphite_admin_email: "root@localhost"
+graphite_admin_email: "root@localhost.localhdomain"
 graphite_admin_first_name: ""
 graphite_admin_last_name: ""
 graphite_admin_last_login: "2014-07-21T10:11:17.464"
 graphite_admin_username: "admin"
-graphite_admin_password_hash: "pbkdf2_sha256$12000$kVwkSbtyrM2q$UiFHRnWZXQSLLv658mx7K+Fym6F5L0dJUh8iNHnFigk=" # admin
+graphite_admin_password: "admin"
 
 # The default is "60s:1d" (1 day data), this will keep data for 5 years.
 # If you log a lot of data, you may need to restrict this to a shorter time.
