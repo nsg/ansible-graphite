@@ -36,7 +36,7 @@ Role Variables
 * `graphite_admin_last_name`, default: `""`
 * `graphite_admin_last_login`, default: `"2014-07-21T10:11:17.464"`
 * `graphite_admin_username`, default: `"admin"`
-* `graphite_admin_password_hash`, is set to `admin` by default: `"pbkdf2_sha256$12000$kVwkSbtyrM2q$UiFHRnWZXQSLLv658mx7K+Fym6F5L0dJUh8iNHnFigk="`
+* `graphite_admin_password`, default: `"admin"`
 
 The default is "60s:1d" (1 day data), this will keep data for 5 years.
 If you log a lot of data, you may need to restrict this to a shorter time.
