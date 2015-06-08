@@ -9,7 +9,7 @@
 # CARBON_METRIC_PREFIX and CARBON_METRIC_INTERVAL settings
 [carbon]
 pattern = ^carbon\.
-retentions = 60:90d
+retentions = {{ graphite_storage_schemas_carbon_retentions }}
 
 [default]
 pattern = .*
