@@ -28,15 +28,15 @@
 #   LOG_DIR        = /var/log/carbon/
 #   PID_DIR        = /var/run/
 #
-#LOCAL_DATA_DIR = /opt/graphite/storage/whisper/
+LOCAL_DATA_DIR = {{ graphite_cache_local_data_dir }}
 
 # Enable daily log rotation. If disabled, a kill -HUP can be used after a manual rotate
-ENABLE_LOGROTATION = True
+ENABLE_LOGROTATION = {{ graphite_cache_enable_log_rotation }}
 
 # Specify the user to drop privileges to
 # If this is blank carbon runs as the user that invokes it
 # This user must have write access to the local data directory
-USER =
+USER = {{ graphite_cache_user }}
 #
 # NOTE: The above settings must be set under [relay] and [aggregator]
 #       to take effect for those daemons as well
@@ -44,20 +44,20 @@ USER =
 # Limit the size of the cache to avoid swapping or becoming CPU bound.
 # Sorts and serving cache queries gets more expensive as the cache grows.
 # Use the value "inf" (infinity) for an unlimited cache size.
-MAX_CACHE_SIZE = inf
+MAX_CACHE_SIZE = {{ graphite_cache_max_cache_size }}
 
 # Limits the number of whisper update_many() calls per second, which effectively
 # means the number of write requests sent to the disk. This is intended to
 # prevent over-utilizing the disk and thus starving the rest of the system.
 # When the rate of required updates exceeds this, then carbon's caching will
 # take effect and increase the overall throughput accordingly.
-MAX_UPDATES_PER_SECOND = 500
+MAX_UPDATES_PER_SECOND = {{ graphite_cache_max_updates_per_second }}
 
 # If defined, this changes the MAX_UPDATES_PER_SECOND in Carbon when a
 # stop/shutdown is initiated.  This helps when MAX_UPDATES_PER_SECOND is
 # relatively low and carbon has cached a lot of updates; it enables the carbon
 # daemon to shutdown more quickly. 
-# MAX_UPDATES_PER_SECOND_ON_SHUTDOWN = 1000
+MAX_UPDATES_PER_SECOND_ON_SHUTDOWN = {{ graphite_cache_max_updates_per_second }}
 
 # Softly limits the number of whisper files that get created each minute.
 # Setting this value low (like at 50) is a good way to ensure your graphite
@@ -66,43 +66,43 @@ MAX_UPDATES_PER_SECOND = 500
 # database files to all get created and thus longer until the data becomes usable.
 # Setting this value high (like "inf" for infinity) will cause graphite to create
 # the files quickly but at the risk of slowing I/O down considerably for a while.
-MAX_CREATES_PER_MINUTE = 50
+MAX_CREATES_PER_MINUTE = {{ graphite_cache_max_creates_per_minute }}
 
-LINE_RECEIVER_INTERFACE = 0.0.0.0
-LINE_RECEIVER_PORT = 2003
+LINE_RECEIVER_INTERFACE = {{ graphite_cache_line_receiver_interface }}
+LINE_RECEIVER_PORT = {{ graphite_cache_line_receiver_port }}
 
 # Set this to True to enable the UDP listener. By default this is off
 # because it is very common to run multiple carbon daemons and managing
 # another (rarely used) port for every carbon instance is not fun.
-ENABLE_UDP_LISTENER = False
-UDP_RECEIVER_INTERFACE = 0.0.0.0
-UDP_RECEIVER_PORT = 2003
+ENABLE_UDP_LISTENER = {{ graphite_cache_enable_udp_listener }}
+UDP_RECEIVER_INTERFACE = {{ graphite_cache_udp_receiver_interface }}
+UDP_RECEIVER_PORT =  {{ graphite_cache_udp_receiver_port }}
 
-PICKLE_RECEIVER_INTERFACE = 0.0.0.0
-PICKLE_RECEIVER_PORT = 2004
+PICKLE_RECEIVER_INTERFACE = {{ graphite_cache_pickle_receiver_interface }}
+PICKLE_RECEIVER_PORT = {{ graphite_cache_pickle_receiver_port }}
 
 # Set to false to disable logging of successful connections
-LOG_LISTENER_CONNECTIONS = True
+LOG_LISTENER_CONNECTIONS = {{ graphite_cache_log_listener_connections }}
 
-# Per security concerns outlined in Bug #817247 the pickle receiver
+# per security concerns outlined in Bug #817247 the pickle receiver
 # will use a more secure and slightly less efficient unpickler.
 # Set this to True to revert to the old-fashioned insecure unpickler.
-USE_INSECURE_UNPICKLER = False
+USE_INSECURE_UNPICKLER = {{ graphite_cache_use_insecure_unpickler }}
 
-CACHE_QUERY_INTERFACE = 0.0.0.0
-CACHE_QUERY_PORT = 7002
+CACHE_QUERY_INTERFACE = {{ graphite_cache_cache_query_interface }}
+CACHE_QUERY_PORT = {{ graphite_cache_cache_query_port }}
 
 # Set this to False to drop datapoints received after the cache
 # reaches MAX_CACHE_SIZE. If this is True (the default) then sockets
 # over which metrics are received will temporarily stop accepting
 # data until the cache size falls below 95% MAX_CACHE_SIZE.
-USE_FLOW_CONTROL = True
+USE_FLOW_CONTROL = {{ graphite_cache_use_flow_control }}
 
 # By default, carbon-cache will log every whisper update and cache hit. This can be excessive and
 # degrade performance if logging on the same volume as the whisper data is stored.
-LOG_UPDATES = False
-LOG_CACHE_HITS = False
-LOG_CACHE_QUEUE_SORTS = True
+LOG_UPDATES = {{ graphite_cache_log_updates }}
+LOG_CACHE_HITS = {{ graphite_cache_log_cache_hits }}
+LOG_CACHE_QUEUE_SORTS = {{ graphite_cache_log_cache_queue_sorts }}
 
 # The thread that writes metrics to disk can use on of the following strategies
 # determining the order in which metrics are removed from cache and flushed to
@@ -127,12 +127,12 @@ LOG_CACHE_QUEUE_SORTS = True
 # the OS's i/o scheduler is expected to compensate for the random write
 # pattern.
 #
-CACHE_WRITE_STRATEGY = sorted
+CACHE_WRITE_STRATEGY = {{ graphite_cache_cache_write_strategy }}
 
 # On some systems it is desirable for whisper to write synchronously.
 # Set this option to True if you'd like to try this. Basically it will
 # shift the onus of buffering writes from the kernel into carbon's cache.
-WHISPER_AUTOFLUSH = False
+WHISPER_AUTOFLUSH = {{ graphite_cache_whisper_autoflush }}
 
 # By default new Whisper files are created pre-allocated with the data region
 # filled with zeros to prevent fragmentation and speed up contiguous reads and
@@ -140,7 +140,7 @@ WHISPER_AUTOFLUSH = False
 # the file sparsely instead. Enabling this option may allow a large increase of
 # MAX_CREATES_PER_MINUTE but may have longer term performance implications
 # depending on the underlying storage configuration.
-# WHISPER_SPARSE_CREATE = False
+WHISPER_SPARSE_CREATE = {{ graphite_cache_whisper_sparse_create }}
 
 # Only beneficial on linux filesystems that support the fallocate system call.
 # It maintains the benefits of contiguous reads/writes, but with a potentially
@@ -148,38 +148,38 @@ WHISPER_AUTOFLUSH = False
 # allocation and zero-ing. Enabling this option may allow a large increase of
 # MAX_CREATES_PER_MINUTE. If enabled on an OS or filesystem that is unsupported
 # this option will gracefully fallback to standard POSIX file access methods.
-WHISPER_FALLOCATE_CREATE = True
+WHISPER_FALLOCATE_CREATE = {{ graphite_cache_whisper_fallocate_create }}
 
 # Enabling this option will cause Whisper to lock each Whisper file it writes
 # to with an exclusive lock (LOCK_EX, see: man 2 flock). This is useful when
 # multiple carbon-cache daemons are writing to the same files
-# WHISPER_LOCK_WRITES = False
+WHISPER_LOCK_WRITES = {{ graphite_cache_whisper_lock_writes }}
 
 # Set this to True to enable whitelisting and blacklisting of metrics in
 # CONF_DIR/whitelist and CONF_DIR/blacklist. If the whitelist is missing or
 # empty, all metrics will pass through
-# USE_WHITELIST = False
+USE_WHITELIST = {{ graphite_cache_use_whitelist }}
 
 # By default, carbon itself will log statistics (such as a count,
 # metricsReceived) with the top level prefix of 'carbon' at an interval of 60
 # seconds. Set CARBON_METRIC_INTERVAL to 0 to disable instrumentation
-# CARBON_METRIC_PREFIX = carbon
-# CARBON_METRIC_INTERVAL = 60
+CARBON_METRIC_PREFIX = {{ graphite_cache_carbon_metric_prefix }}
+CARBON_METRIC_INTERVAL = {{ graphite_cache_carbon_metric_interval }}
 
 # Enable AMQP if you want to receve metrics using an amqp broker
-# ENABLE_AMQP = False
+ENABLE_AMQP = {{ graphite_cache_enable_amqp }}
 
 # Verbose means a line will be logged for every metric received
 # useful for testing
-# AMQP_VERBOSE = False
+AMQP_VERBOSE = {{ graphite_cache_amqp_verbose }}
 
-# AMQP_HOST = localhost
-# AMQP_PORT = 5672
-# AMQP_VHOST = /
-# AMQP_USER = guest
-# AMQP_PASSWORD = guest
-# AMQP_EXCHANGE = graphite
-# AMQP_METRIC_NAME_IN_BODY = False
+AMQP_HOST = {{ graphite_cache_amqp_host }}
+AMQP_PORT = {{ graphite_cache_amqp_port }}
+AMQP_VHOST = {{ graphite_cache_amqp_vhost }}
+AMQP_USER = {{ graphite_cache_amqp_user }}
+AMQP_PASSWORD = {{ graphite_cache_amqp_password }}
+AMQP_EXCHANGE = {{ graphite_cache_amqp_exchange }}
+AMQP_METRIC_NAME_IN_BODY = {{ graphite_cache_amqp_metric_name_in_body }}
 
 # The manhole interface allows you to SSH into the carbon daemon
 # and get a python interpreter. BE CAREFUL WITH THIS! If you do
@@ -188,11 +188,11 @@ WHISPER_FALLOCATE_CREATE = True
 # you are familiar with the code. If you are not, please don't
 # mess with this, you are asking for trouble :)
 #
-# ENABLE_MANHOLE = False
-# MANHOLE_INTERFACE = 127.0.0.1
-# MANHOLE_PORT = 7222
-# MANHOLE_USER = admin
-# MANHOLE_PUBLIC_KEY = ssh-rsa AAAAB3NzaC1yc2EAAAABiwAaAIEAoxN0sv/e4eZCPpi3N3KYvyzRaBaMeS2RsOQ/cDuKv11dlNzVeiyc3RFmCv5Rjwn/lQ79y0zyHxw67qLyhQ/kDzINc4cY41ivuQXm2tPmgvexdrBv5nsfEpjs3gLZfJnyvlcVyWK/lId8WUvEWSWHTzsbtmXAF2raJMdgLTbQ8wE=
+ENABLE_MANHOLE = {{ graphite_cache_enable_manhole }}
+MANHOLE_INTERFACE = {{ graphite_cache_manhole_interface }}
+MANHOLE_PORT = {{ graphite_cache_manhole_port }}
+MANHOLE_USER = {{ graphite_cache_manhole_user }}
+MANHOLE_PUBLIC_KEY = {{ graphite_cache_manhole_public_key }}
 
 # Patterns for all of the metrics this machine will store. Read more at
 # http://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol#Bindings
@@ -201,7 +201,7 @@ WHISPER_FALLOCATE_CREATE = True
 # BIND_PATTERNS = sales.#, servers.linux.#, #.utilization
 #
 # Example: store everything
-# BIND_PATTERNS = #
+BIND_PATTERNS = {{ graphite_cache_bind_patterns }}
 
 # To configure special settings for the carbon-cache instance 'b', uncomment this:
 #[cache:b]
@@ -215,15 +215,16 @@ WHISPER_FALLOCATE_CREATE = True
 
 
 [relay]
-LINE_RECEIVER_INTERFACE = 0.0.0.0
-LINE_RECEIVER_PORT = 2013
-PICKLE_RECEIVER_INTERFACE = 0.0.0.0
-PICKLE_RECEIVER_PORT = 2014
+USER = {{ graphite_relay_user }}
+LINE_RECEIVER_INTERFACE = {{ graphite_relay_line_receiver_interface }}
+LINE_RECEIVER_PORT = {{ graphite_relay_line_receiver_port }}
+PICKLE_RECEIVER_INTERFACE = {{ graphite_relay_pickle_receiver_interface }}
+PICKLE_RECEIVER_PORT = {{ graphite_relay_pickle_receiver_port }}
 
 # Set to false to disable logging of successful connections
-LOG_LISTENER_CONNECTIONS = True
+LOG_LISTENER_CONNECTIONS = {{ graphite_relay_log_listener_connections }}
 
-# Carbon-relay has several options for metric routing controlled by RELAY_METHOD
+# carbon-relay has several options for metric routing controlled by RELAY_METHOD
 #
 # Use relay-rules.conf to route metrics to destinations based on pattern rules
 #RELAY_METHOD = rules
@@ -237,11 +238,11 @@ LOG_LISTENER_CONNECTIONS = True
 # instance.
 # Enable this for carbon-relays that send to a group of carbon-aggregators
 #RELAY_METHOD = aggregated-consistent-hashing
-RELAY_METHOD = rules
+RELAY_METHOD = {{ graphite_relay_relay_method }}
 
 # If you use consistent-hashing you can add redundancy by replicating every
 # datapoint to more than one machine.
-REPLICATION_FACTOR = 1
+REPLICATION_FACTOR = {{ graphite_relay_replication_factor }}
 
 # This is a list of carbon daemons we will send any relayed or
 # generated metrics to. The default provided would send to a single
@@ -259,47 +260,48 @@ REPLICATION_FACTOR = 1
 #
 # If using RELAY_METHOD = rules, all destinations used in relay-rules.conf
 # must be defined in this list
-DESTINATIONS = 127.0.0.1:2004
+DESTINATIONS = {{ graphite_relay_destinations }}
 
 # This defines the maximum "message size" between carbon daemons.
 # You shouldn't need to tune this unless you really know what you're doing.
-MAX_DATAPOINTS_PER_MESSAGE = 500
-MAX_QUEUE_SIZE = 10000
+MAX_DATAPOINTS_PER_MESSAGE = {{ graphite_relay_max_datapoints_per_message }}
+MAX_QUEUE_SIZE = {{ graphite_relay_max_queue_size }}
 
 # Set this to False to drop datapoints when any send queue (sending datapoints
 # to a downstream carbon daemon) hits MAX_QUEUE_SIZE. If this is True (the
 # default) then sockets over which metrics are received will temporarily stop accepting
 # data until the send queues fall below 80% MAX_QUEUE_SIZE.
-USE_FLOW_CONTROL = True
+USE_FLOW_CONTROL = {{ graphite_relay_use_flow_control }}
 
-# Set this to True to enable whitelisting and blacklisting of metrics in
+# set this to True to enable whitelisting and blacklisting of metrics in
 # CONF_DIR/whitelist and CONF_DIR/blacklist. If the whitelist is missing or
 # empty, all metrics will pass through
-# USE_WHITELIST = False
+USE_WHITELIST = {{ graphite_relay_use_whitelist }}
 
 # By default, carbon itself will log statistics (such as a count,
 # metricsReceived) with the top level prefix of 'carbon' at an interval of 60
 # seconds. Set CARBON_METRIC_INTERVAL to 0 to disable instrumentation
-# CARBON_METRIC_PREFIX = carbon
-# CARBON_METRIC_INTERVAL = 60
+CARBON_METRIC_PREFIX = {{ graphite_relay_carbon_metric_prefix }}
+CARBON_METRIC_INTERVAL = {{ graphite_relay_carbon_metric_interval }}
 
 
 [aggregator]
-LINE_RECEIVER_INTERFACE = 0.0.0.0
-LINE_RECEIVER_PORT = 2023
+USER = {{ graphite_aggregator_user }}
+LINE_RECEIVER_INTERFACE = {{ graphite_aggregator_line_receiver_interface }}
+LINE_RECEIVER_PORT = {{ graphite_aggregator_line_receiver_port }}
 
-PICKLE_RECEIVER_INTERFACE = 0.0.0.0
-PICKLE_RECEIVER_PORT = 2024
+PICKLE_RECEIVER_INTERFACE = {{ graphite_aggregator_pickle_receiver_interface }}
+PICKLE_RECEIVER_PORT = {{ graphite_aggregator_pickle_receiver_port }}
 
 # Set to false to disable logging of successful connections
-LOG_LISTENER_CONNECTIONS = True
+LOG_LISTENER_CONNECTIONS = {{ graphite_aggregator_log_listener_connections }}
 
 # If set true, metric received will be forwarded to DESTINATIONS in addition to
 # the output of the aggregation rules. If set false the carbon-aggregator will
 # only ever send the output of aggregation.
-FORWARD_ALL = True
+FORWARD_ALL = {{ graphite_aggregator_forward_all }}
 
-# This is a list of carbon daemons we will send any relayed or
+# this is a list of carbon daemons we will send any relayed or
 # generated metrics to. The default provided would send to a single
 # carbon-cache instance on the default port. However if you
 # use multiple carbon-cache instances then it would look like this:
@@ -312,32 +314,32 @@ FORWARD_ALL = True
 # Note that if the destinations are all carbon-caches then this should
 # exactly match the webapp's CARBONLINK_HOSTS setting in terms of
 # instances listed (order matters!).
-DESTINATIONS = 127.0.0.1:2004
+DESTINATIONS = {{ graphite_aggregator_destinations }}
 
-# If you want to add redundancy to your data by replicating every
+# if you want to add redundancy to your data by replicating every
 # datapoint to more than one machine, increase this.
-REPLICATION_FACTOR = 1
+REPLICATION_FACTOR = {{ graphite_aggregator_replication_factor }}
 
 # This is the maximum number of datapoints that can be queued up
 # for a single destination. Once this limit is hit, we will
 # stop accepting new data if USE_FLOW_CONTROL is True, otherwise
 # we will drop any subsequently received datapoints.
-MAX_QUEUE_SIZE = 10000
+MAX_QUEUE_SIZE = {{ graphite_aggregator_max_queue_size }}
 
 # Set this to False to drop datapoints when any send queue (sending datapoints
 # to a downstream carbon daemon) hits MAX_QUEUE_SIZE. If this is True (the
 # default) then sockets over which metrics are received will temporarily stop accepting
 # data until the send queues fall below 80% MAX_QUEUE_SIZE.
-USE_FLOW_CONTROL = True
+USE_FLOW_CONTROL = {{ graphite_aggregator_use_flow_control }}
 
 # This defines the maximum "message size" between carbon daemons.
 # You shouldn't need to tune this unless you really know what you're doing.
-MAX_DATAPOINTS_PER_MESSAGE = 500
+MAX_DATAPOINTS_PER_MESSAGE = {{ graphite_aggregator_max_datapoints_per_message }}
 
 # This defines how many datapoints the aggregator remembers for
 # each metric. Aggregation only happens for datapoints that fall in
 # the past MAX_AGGREGATION_INTERVALS * intervalSize seconds.
-MAX_AGGREGATION_INTERVALS = 5
+MAX_AGGREGATION_INTERVALS = {{ graphite_aggregator_max_aggregation_intervals }}
 
 # By default (WRITE_BACK_FREQUENCY = 0), carbon-aggregator will write back
 # aggregated data points once every rule.frequency seconds, on a per-rule basis.
@@ -345,15 +347,15 @@ MAX_AGGREGATION_INTERVALS = 5
 # every N seconds, independent of rule frequency. This is useful, for example,
 # to be able to query partially aggregated metrics from carbon-cache without
 # having to first wait rule.frequency seconds.
-# WRITE_BACK_FREQUENCY = 0
+WRITE_BACK_FREQUENCY = {{ graphite_aggregator_write_back_frequency }}
 
 # Set this to True to enable whitelisting and blacklisting of metrics in
 # CONF_DIR/whitelist and CONF_DIR/blacklist. If the whitelist is missing or
 # empty, all metrics will pass through
-# USE_WHITELIST = False
+USE_WHITELIST = {{ graphite_aggregator_use_whitelist }}
 
 # By default, carbon itself will log statistics (such as a count,
 # metricsReceived) with the top level prefix of 'carbon' at an interval of 60
 # seconds. Set CARBON_METRIC_INTERVAL to 0 to disable instrumentation
-# CARBON_METRIC_PREFIX = carbon
-# CARBON_METRIC_INTERVAL = 60
+CARBON_METRIC_PREFIX = {{ graphite_aggregator_carbon_metric_prefix }}
+CARBON_METRIC_INTERVAL = {{ graphite_aggregator_carbon_metric_interval }}
