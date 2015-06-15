@@ -77,7 +77,7 @@ graphite_relay_relay_method:               rules
 graphite_relay_replication_factor:         1
 graphite_relay_use_flow_control:           true
 graphite_relay_use_whitelist:              false
-graphite_relay_user:                       
+#graphite_relay_user:
 
 graphite_aggregator_carbon_metric_interval:     60
 graphite_aggregator_carbon_metric_prefix:       carbon

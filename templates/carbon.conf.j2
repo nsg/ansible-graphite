@@ -215,7 +215,9 @@ BIND_PATTERNS = {{ graphite_cache_bind_patterns }}
 
 
 [relay]
+{% if graphite_relay_user is defined -%}
 USER = {{ graphite_relay_user }}
+{% endif -%}
 LINE_RECEIVER_INTERFACE = {{ graphite_relay_line_receiver_interface }}
 LINE_RECEIVER_PORT = {{ graphite_relay_line_receiver_port }}
 PICKLE_RECEIVER_INTERFACE = {{ graphite_relay_pickle_receiver_interface }}
