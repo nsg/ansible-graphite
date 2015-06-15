@@ -288,7 +288,9 @@ CARBON_METRIC_INTERVAL = {{ graphite_relay_carbon_metric_interval }}
 
 
 [aggregator]
+{% if graphite_aggregator_user is defined -%}
 USER = {{ graphite_aggregator_user }}
+{% endif -%}
 LINE_RECEIVER_INTERFACE = {{ graphite_aggregator_line_receiver_interface }}
 LINE_RECEIVER_PORT = {{ graphite_aggregator_line_receiver_port }}
 

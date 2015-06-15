@@ -94,5 +94,5 @@ graphite_aggregator_pickle_receiver_port:       2024
 graphite_aggregator_replication_factor:         1
 graphite_aggregator_use_flow_control:           true
 graphite_aggregator_use_whitelist:              false
-graphite_aggregator_user:                       
+#graphite_aggregator_user:
 graphite_aggregator_write_back_frequency:       0
