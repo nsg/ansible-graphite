@@ -57,7 +57,7 @@ MAX_UPDATES_PER_SECOND = {{ graphite_cache_max_updates_per_second }}
 # stop/shutdown is initiated.  This helps when MAX_UPDATES_PER_SECOND is
 # relatively low and carbon has cached a lot of updates; it enables the carbon
 # daemon to shutdown more quickly. 
-MAX_UPDATES_PER_SECOND_ON_SHUTDOWN = {{ graphite_cache_max_updates_per_second }}
+MAX_UPDATES_PER_SECOND_ON_SHUTDOWN = {{ graphite_cache_max_updates_per_second_on_shutdown }}
 
 # Softly limits the number of whisper files that get created each minute.
 # Setting this value low (like at 50) is a good way to ensure your graphite
