@@ -57,7 +57,7 @@ graphite_cache_udp_receiver_port:                  2003
 graphite_cache_use_flow_control:                   true
 graphite_cache_use_insecure_unpickler:             false
 graphite_cache_use_whitelist:                      false
-graphite_cache_user:                               
+#graphite_cache_user:
 graphite_cache_whisper_autoflush:                  false
 graphite_cache_whisper_fallocate_create:           true
 graphite_cache_whisper_lock_writes:                false

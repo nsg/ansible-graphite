@@ -36,7 +36,7 @@ ENABLE_LOGROTATION = {{ graphite_cache_enable_log_rotation }}
 # Specify the user to drop privileges to
 # If this is blank carbon runs as the user that invokes it
 # This user must have write access to the local data directory
-USER = {{ graphite_cache_user }}
+USER = {{ graphite_cache_user|default("") }}
 #
 # NOTE: The above settings must be set under [relay] and [aggregator]
 #       to take effect for those daemons as well
