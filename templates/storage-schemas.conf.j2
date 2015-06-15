@@ -5,12 +5,19 @@
 #  pattern = regex
 #  retentions = timePerPoint:timeToStore, timePerPoint:timeToStore, ...
 
+{% for schema in graphite_storage_schemas %}
+[{{ schema.name }}]
+pattern = {{ schema.pattern }}
+retentions = {{ schema.retentions }}
+{% endfor %}
+
 # Carbon's internal metrics. This entry should match what is specified in
 # CARBON_METRIC_PREFIX and CARBON_METRIC_INTERVAL settings
 [carbon]
 pattern = ^carbon\.
-retentions = 60:90d
+retentions = {{ graphite_storage_schemas_carbon_retentions }}
 
 [default]
 pattern = .*
 retentions = {{ graphite_storage_schemas_default_retentions }}
+
