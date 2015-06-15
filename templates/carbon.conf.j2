@@ -305,7 +305,7 @@ LOG_LISTENER_CONNECTIONS = {{ graphite_aggregator_log_listener_connections }}
 # only ever send the output of aggregation.
 FORWARD_ALL = {{ graphite_aggregator_forward_all }}
 
-# this is a list of carbon daemons we will send any relayed or
+# This is a list of carbon daemons we will send any relayed or
 # generated metrics to. The default provided would send to a single
 # carbon-cache instance on the default port. However if you
 # use multiple carbon-cache instances then it would look like this:
@@ -320,7 +320,7 @@ FORWARD_ALL = {{ graphite_aggregator_forward_all }}
 # instances listed (order matters!).
 DESTINATIONS = {{ graphite_aggregator_destinations }}
 
-# if you want to add redundancy to your data by replicating every
+# If you want to add redundancy to your data by replicating every
 # datapoint to more than one machine, increase this.
 REPLICATION_FACTOR = {{ graphite_aggregator_replication_factor }}
 
