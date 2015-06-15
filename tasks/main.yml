@@ -19,7 +19,7 @@
     - carbon
     - graphite-web
     - "django==1.5" # Current version of graphite do not support 1.6
-    - django-tagging
+    - "django-tagging==0.3.6" # Never versions require Django 1.7+
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
   notify: restart carbon-cache
