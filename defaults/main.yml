@@ -15,6 +15,7 @@ graphite_admin_password:    "admin"
 # If you log a lot of data, you may need to restrict this to a shorter time.
 graphite_storage_schemas_default_retentions: "10s:14d,1m:90d,30m:1y,1h:5y"
 graphite_storage_schemas_carbon_retentions: 60:90d
+graphite_storage_schemas: []
 
 graphite_cache_amqp_exchange:                      graphite
 graphite_cache_amqp_host:                          localhost
