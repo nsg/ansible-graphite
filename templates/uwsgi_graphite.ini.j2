@@ -8,3 +8,6 @@ module = wsgi:application
 {% if ansible_os_family == "RedHat" %}
 pidfile = /run/uwsgi/graphite/pid
 {% endif %}
+{% for opts in uwsgi_graphite_extraopts %}
+{{ opts.option }}={{ opts.value }}
+{% endfor %}
