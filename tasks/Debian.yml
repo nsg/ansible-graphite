@@ -19,7 +19,7 @@
 - name: Install init.d script for carbon-cache
   template: src=debian_carbon_service.j2 dest=/etc/init.d/carbon-cache
   notify: restart carbon-cache
-  when: ansible_distribution_release == "wheesy"
+  when: ansible_distribution_release == "wheesy" or ansible_distribution_release == "trusty"
 
 - name: Install systemd unit carbon-cache.service 
   template: src=debian_carbon_service_systemd.j2 dest=/etc/systemd/system/carbon-cache.service
@@ -30,7 +30,7 @@
   file: path=/etc/init.d/{{ item }} mode=0755 owner=root group=root
   with_items:
     - carbon-cache
-  when: ansible_distribution_release == "wheesy"
+  when: ansible_distribution_release == "wheesy" or ansible_distribution_release == "trusty"
 
 - name: Reload systemd if unit file has changed
   shell: 'systemctl daemon-reload'
