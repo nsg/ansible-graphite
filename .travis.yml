@@ -1,0 +1,27 @@
+---
+
+sudo: required
+language: python
+services:
+  - docker
+
+env:
+  global:
+    - ANSIBLE_HOST_KEY_CHECKING=False
+    - VERBOSE_TESTS=1
+  matrix:
+    - TEST_OSVER="debian:7"
+    - TEST_OSVER="ubuntu:1404"
+    - TEST_OSVER="centos:6"
+
+before_install:
+  # hack! https://github.com/travis-ci/travis-ci/issues/4778
+  - sudo service docker restart ; sleep 10
+
+install:
+  # Download ansible-role-tester and setup the enviroment
+  - wget https://raw.githubusercontent.com/nsg/ansible-role-tester/master/test/test.sh
+  - chmod +x test.sh
+
+script:
+  - ./test.sh $TEST_OSVER
