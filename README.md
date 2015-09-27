@@ -1,6 +1,8 @@
 nsg.graphite
 ========
 
+[![Build Status](https://travis-ci.org/nsg/ansible-graphite.svg?branch=master)](https://travis-ci.org/nsg/ansible-graphite)
+
 This role installs graphite, I choose to install graphite from pip because the packages in the distributions repositories are old and features are missing. I’m using apt/yum when possible.
 
 Requirements

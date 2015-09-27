@@ -1,0 +1,18 @@
+---
+
+- hosts: all
+  pre_tasks:
+
+    # This is a hack because start-stop-daemon get a little confused
+    # when we run this inside a container and "start-stop-daemon --start
+    # --pidfile mypid --exec myexec --test" fails to correctly identify
+    # that the process has been successfully started. The pid file is
+    # correct. The little more relaxed --startas checks works.
+
+    - name: install uwsgi
+      apt: name=uwsgi
+      when: ansible_os_family == "Debian"
+
+    - name: uwsgi fix for Docker
+      shell: sed -i 's/\-\-exec/--startas/g' /usr/share/uwsgi/init/specific_daemon
+      when: ansible_os_family == "Debian"

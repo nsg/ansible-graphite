@@ -37,9 +37,16 @@ stop() {
 	/opt/graphite/bin/carbon-cache.py stop 2> /dev/null
 	RETVAL=$?
 	echo -n "Wait for process to close "
+	cnt=0
 	while status; do 
 		echo -n .
 		sleep 1
+		cnt=$(( cnt + 1 ))
+		if [ $cnt -gt 10 ]; then
+			echo "Failed to stop process, send SIGKILL"
+			kill -9 $(ps -fu {{ graphite_user }} | awk '/carbon-cache/{print $2}')
+			break
+		fi
 	done
 	echo
 	return $RETVAL

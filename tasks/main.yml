@@ -82,9 +82,3 @@
 
 - name: Remove temp file
   file: path=/tmp/createsuperuser.py state=absent
-
-- name: Make sure services are running
-  service: name={{ item }} state=started
-  with_items:
-    - carbon-cache
-    - uwsgi
