@@ -9,4 +9,4 @@
 
     - name: Install nginx (RedHat)
       yum: name=nginx
-      when: ansible_os_family == "Debian"
+      when: ansible_os_family == "RedHat"
