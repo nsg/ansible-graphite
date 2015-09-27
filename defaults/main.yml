@@ -99,5 +99,3 @@ graphite_aggregator_write_back_frequency:       0
 
 # Optional extra options for uwsgi_graphite.ini
 uwsgi_graphite_extraopts: []
-
-ignore_systemd_reload: False

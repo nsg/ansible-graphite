@@ -34,7 +34,7 @@
 
 - name: Reload systemd if unit file has changed
   shell: 'systemctl daemon-reload'
-  when: ccunit.changed and ansible_distribution_release == "jessie" and not ignore_systemd_reload
+  when: ccunit.changed and ansible_distribution_release == "jessie"
   notify: restart carbon-cache
 
 - name: Install uwsgi graphite config

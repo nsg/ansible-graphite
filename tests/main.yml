@@ -6,4 +6,3 @@
   roles:
     - role: ansible-graphite
       graphite_secret_key: testtest123
-      ignore_systemd_reload: True
