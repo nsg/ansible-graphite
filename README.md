@@ -24,6 +24,17 @@ server {
 }
 ```
 
+Alternatively, you can define `uwsgi_graphite_extraopts` with additional uwsgi configuration, which can e.g. enable http on port 8080 or add basic auth:
+```yaml
+uwsgi_graphite_extraopts:
+  - option: http
+    value: "{{ ansible_default_ipv4.address }}:8080"
+  - option: plugins
+    value: router_basicauth
+  - option: route
+    value: "^/ basicauth:myRealm,foo:bar"
+```
+
 Role Variables
 --------------
 
