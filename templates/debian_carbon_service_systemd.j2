@@ -1,0 +1,17 @@
+[Unit]
+Description=carbon-cache
+After=network.target
+
+[Service]
+Environment="PYTHONPATH={{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
+
+# debug param seems required, otherwise carbon-cache
+# just exits with code 0 and nothing is running
+ExecStart={{ graphite_install_path }}/bin/carbon-cache.py --debug start
+Restart=on-failure
+User={{ graphite_user }}
+Group={{ graphite_user }}
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

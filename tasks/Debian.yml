@@ -19,11 +19,25 @@
 - name: Install init.d script for carbon-cache
   template: src=debian_carbon_service.j2 dest=/etc/init.d/carbon-cache
   notify: restart carbon-cache
+  when: ansible_distribution_release == "wheesy" or ansible_distribution_release == "trusty"
+
+- name: Install systemd unit carbon-cache.service 
+  template: src=debian_carbon_service_systemd.j2 dest=/etc/systemd/system/carbon-cache.service
+  when: ansible_distribution_release == "jessie"
+  register: ccunit
 
 - name: Check the install scripts perms
   file: path=/etc/init.d/{{ item }} mode=0755 owner=root group=root
   with_items:
     - carbon-cache
+  when: ansible_distribution_release == "wheesy" or ansible_distribution_release == "trusty"
+
+- name: Reload systemd if unit file has changed
+  shell: 'systemctl daemon-reload'
+  when: ccunit.changed and ansible_distribution_release == "jessie"
+  notify: restart carbon-cache
+
+
 
 - name: Install uwsgi graphite config
   template: src=uwsgi_graphite.ini.j2 dest=/etc/uwsgi/apps-available/graphite.ini
