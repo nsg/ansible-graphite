@@ -2,6 +2,7 @@
 
 - name: restart carbon-cache
   service: name=carbon-cache state=restarted
+  when: not ignore_systemd_reload
 
 - name: restart uwsgi
   service: name=uwsgi state=restarted
