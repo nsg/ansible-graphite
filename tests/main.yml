@@ -6,4 +6,4 @@
   roles:
     - role: ansible-graphite
       graphite_secret_key: testtest123
-      uwsgi_docker_hack: True
+      ignore_systemd_reload: True
