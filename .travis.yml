@@ -8,7 +8,6 @@ services:
 env:
   global:
     - ANSIBLE_HOST_KEY_CHECKING=False
-    - VERBOSE_TESTS=1
   matrix:
     - TEST_OSVER="debian:7"
     - TEST_OSVER="debian:8"
