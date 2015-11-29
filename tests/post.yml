@@ -46,3 +46,31 @@
 
     - name: Search for the value from graphite-web
       shell: "curl -s 'http://localhost:8080/render/?_salt=1448817576.96&target=local.random.diceroll&format=csv' | grep ',4711.0'"
+
+    - name: Remove false positives from carbon creates.log
+      lineinfile:
+        dest: /opt/graphite/storage/log/carbon-cache/carbon-cache-a/creates.log
+        line: "- REMOVED -"
+        regexp: "{{ item }}"
+      with_items:
+        - "creating database file.*errors.wsp"
+        - "new metric carbon.agents.*a.errors matched schema carbon"
+        - "new metric carbon.agents.*a.errors matched aggregation schema default"
+
+    - name: Search for errors in logs
+      shell: cat {{ item }}
+      register: logout
+      failed_when: >
+        'error' in logout.stdout or
+        'Error' in logout.stdout or
+        'ERROR' in logout.stdout
+      with_items:
+        - /var/log/uwsgi_graphite.log
+        - /var/log/nginx/graphite.error.log
+        - /var/log/nginx/error.log
+        - /opt/graphite/storage/log/webapp/info.log
+        - /opt/graphite/storage/log/webapp/exception.log
+        - /opt/graphite/storage/log/carbon-cache/carbon-cache-a/query.log
+        - /opt/graphite/storage/log/carbon-cache/carbon-cache-a/listener.log
+        - /opt/graphite/storage/log/carbon-cache/carbon-cache-a/creates.log
+        - /opt/graphite/storage/log/carbon-cache/carbon-cache-a/console.log
