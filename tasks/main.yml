@@ -33,7 +33,7 @@
   template: src=storage-schemas.conf.j2 dest={{ graphite_install_path }}/conf/storage-schemas.conf
   notify: restart carbon-cache
 
-- name: Install uwsgi
+- name: Install uwsgi configuration
   template: src=wsgi.py.j2 dest={{ graphite_install_path }}/conf/wsgi.py
   notify: restart carbon-cache
 
