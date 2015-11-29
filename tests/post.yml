@@ -10,3 +10,30 @@
     - name: Install nginx (RedHat)
       yum: name=nginx
       when: ansible_os_family == "RedHat"
+
+    - name: Install nginx config
+      template:
+        src: templates/graphite.conf.j2
+        dest: /etc/nginx/conf.d/graphite.conf
+
+    - name: Start nginx
+      service: name=nginx state=started
+
+
+    # Ready to check the installation
+
+    - name: Make sure processes are running
+      shell: "pgrep {{ item }}"
+      with_items:
+        - carbon-cache
+        - uwsgi
+        - nginx
+
+    - name: "Make sure we have a Graphite install at localhost:8080"
+      shell: "curl -s http://localhost:8080 | grep 'Graphite Browser'"
+
+    - name: Download a sample graph
+      shell: "curl -so out 'http://localhost:8080/render/?width=586&height=308&_salt=1448804805.156&target=carbon.agents.*-a.cache.size'"
+
+    - name: Make sure that we got a image
+      shell: file out | grep -i image
