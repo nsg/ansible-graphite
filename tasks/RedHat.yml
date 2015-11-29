@@ -1,7 +1,12 @@
 ---
 
-- name: Install EPEL repository
+- name: Install EPEL repository from fedoraproject.org
   yum: name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+  when: ansible_distribution_version.split(".")[0]|int < 7
+
+- name: Install EPEL repository from repo
+  yum: name=epel-release
+  when: ansible_distribution_version.split(".")[0]|int >= 7
 
 - name: Install packages with yum
   yum: name={{ item }} state=present
@@ -10,15 +15,16 @@
     - python-devel
     - gcc
     - cairo-devel
-    - python-twisted
     - pycairo
     - bitmap-fonts-compat
     - libselinux-python
     - fontconfig
     - sudo
+    - libffi-devel
 
-- name: Use the pip package, version 13
-  pip: name="Twisted==13.0" state=present
+- name: "Install Twisted 15.3.0 on 6.x (never versions req python 2.7)"
+  pip: name=Twisted==15.3.0
+  when: ansible_distribution_version.split(".")[0]|int < 7
 
 - name: Install uwsgi with pip
   pip: name=uwsgi state=present

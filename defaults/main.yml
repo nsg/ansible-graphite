@@ -1,10 +1,12 @@
 ---
+graphite_install_version: 0.9.15
+
 graphite_user:       graphite
 graphite_secret_key: UNSAFE_DEFAULT
 graphite_time_zone:  "UTC"
 
 graphite_admin_date_joined: "2014-07-21T10:11:17.464"
-graphite_admin_email:       "root@localhost.localhdomain"
+graphite_admin_email:       "root@example.com"
 graphite_admin_first_name:  ""
 graphite_admin_last_name:   ""
 graphite_admin_last_login:  "2014-07-21T10:11:17.464"

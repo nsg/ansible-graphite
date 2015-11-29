@@ -13,13 +13,7 @@
 
 - name: Setup graphite with pip
   pip: name={{ item }} state=present
-  with_items:
-    - "https://github.com/graphite-project/ceres/tarball/master"
-    - whisper
-    - carbon
-    - graphite-web
-    - "django==1.5" # Current version of graphite do not support 1.6
-    - "django-tagging==0.3.6" # Never versions require Django 1.7+
+  with_items: graphite_install_requirements[graphite_install_version]
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
   notify: restart carbon-cache
@@ -39,7 +33,7 @@
   template: src=storage-schemas.conf.j2 dest={{ graphite_install_path }}/conf/storage-schemas.conf
   notify: restart carbon-cache
 
-- name: Install uwsgi
+- name: Install uwsgi configuration
   template: src=wsgi.py.j2 dest={{ graphite_install_path }}/conf/wsgi.py
   notify: restart carbon-cache
 

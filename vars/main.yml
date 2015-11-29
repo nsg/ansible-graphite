@@ -1,3 +1,20 @@
 ---
 
 graphite_install_path: "/opt/graphite"
+graphite_install_requirements:
+  # List from requirements.txt at https://github.com/graphite-project/graphite-web
+  0.9.15:
+    - Django==1.4
+    - python-memcached==1.47
+    - txAMQP==0.4
+    - simplejson==2.1.6
+    - django-tagging==0.3.1
+    - gunicorn
+    - pytz
+    - sphinx
+    - sphinx_rtd_theme
+    - cairocffi
+    - whisper==0.9.13
+    - whitenoise
+    - graphite-web==0.9.15
+    - carbon==0.9.15
