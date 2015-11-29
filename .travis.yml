@@ -1,6 +1,7 @@
 ---
 
 sudo: required
+dist: trusty
 language: python
 services:
   - docker
@@ -14,10 +15,6 @@ env:
     - TEST_OSVER="ubuntu:1404"
     - TEST_OSVER="centos:6"
     - TEST_OSVER="centos:7"
-
-before_install:
-  # hack! https://github.com/travis-ci/travis-ci/issues/4778
-  - sudo service docker restart ; sleep 10
 
 install:
   # Download ansible-role-tester and setup the enviroment
