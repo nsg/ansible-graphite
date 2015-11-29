@@ -15,12 +15,19 @@
     - python-devel
     - gcc
     - cairo-devel
-    - python-twisted
     - pycairo
     - bitmap-fonts-compat
     - libselinux-python
     - fontconfig
     - sudo
+
+- name: Install Python Twisted | python-twisted
+  yum: name=python-twisted
+  when: ansible_distribution_version.split(".")[0]|int < 7
+
+- name: Install Python Twisted | python-twisted-core
+  yum: name=python-twisted-core
+  when: ansible_distribution_version.split(".")[0]|int >= 7
 
 - name: Use the pip package, version 13
   pip: name="Twisted==13.0" state=present
