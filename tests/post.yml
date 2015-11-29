@@ -39,7 +39,7 @@
       shell: file out | grep -i image
 
     - name: "Insert a matric to carbon"
-      shell: echo "local.random.diceroll 4711 $(date +%s)" | nc 0.0.0.0 2003
+      shell: echo "local.random.diceroll 4711 $(date +%s)" | nc -w 2 0.0.0.0 2003
 
     - name: Wait 5 sec
       pause: seconds=5
@@ -58,7 +58,7 @@
         - "new metric carbon.agents.*a.errors matched aggregation schema default"
 
     - name: Search for errors in logs
-      shell: cat {{ item }}
+      shell: test -f {{ item }} && cat {{ item }}
       register: logout
       failed_when: >
         'error' in logout.stdout or
@@ -66,6 +66,7 @@
         'ERROR' in logout.stdout
       with_items:
         - /var/log/uwsgi_graphite.log
+        - /var/log/uwsgi/app/graphite.log
         - /var/log/nginx/graphite.error.log
         - /var/log/nginx/error.log
         - /opt/graphite/storage/log/webapp/info.log
