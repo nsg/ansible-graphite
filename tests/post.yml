@@ -56,6 +56,7 @@
         - "creating database file.*errors.wsp"
         - "new metric carbon.agents.*a.errors matched schema carbon"
         - "new metric carbon.agents.*a.errors matched aggregation schema default"
+      failed_when: False
 
     - name: Search for errors in logs
       shell: test -f {{ item }} && cat {{ item }}
