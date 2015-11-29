@@ -3,9 +3,18 @@
 - hosts: all
   pre_tasks:
 
-    - name: Make sure we have file installed
-      yum: name=file
+    - name: Install a few packages for the tests
+      yum: name={{ item }}
+      with_items:
+        - file
+        - nc
       when: ansible_os_family == "RedHat"
+
+    - name: Install a few packages for the tests
+      apt: name={{ item }}
+      with_items:
+        - netcat
+      when: ansible_os_family == "Debian"
 
     # This is a hack because start-stop-daemon get a little confused
     # when we run this inside a container and "start-stop-daemon --start

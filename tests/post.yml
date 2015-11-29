@@ -37,3 +37,12 @@
 
     - name: Make sure that we got a image
       shell: file out | grep -i image
+
+    - name: "Insert a matric to carbon"
+      shell: echo "local.random.diceroll 4711 $(date +%s)" | nc 0.0.0.0 2003
+
+    - name: Wait 5 sec
+      pause: seconds=5
+
+    - name: Search for the value from graphite-web
+      shell: "curl -s 'http://localhost:8080/render/?_salt=1448817576.96&target=local.random.diceroll&format=csv' | grep ',4711.0'"
