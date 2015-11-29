@@ -1,7 +1,12 @@
 ---
 
-- name: Install EPEL repository
+- name: Install EPEL repository from fedoraproject.org
   yum: name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+  when: ansible_distribution_version.split(".")[0]|int < 7
+
+- name: Install EPEL repository from repo
+  yum: name=epel-release
+  when: ansible_distribution_version.split(".")[0]|int >= 7
 
 - name: Install packages with yum
   yum: name={{ item }} state=present
