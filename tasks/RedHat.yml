@@ -29,9 +29,6 @@
   yum: name=python-twisted-core
   when: ansible_distribution_version.split(".")[0]|int >= 7
 
-- name: Use the pip package, version 13
-  pip: name="Twisted==13.0" state=present
-
 - name: Install uwsgi with pip
   pip: name=uwsgi state=present
 

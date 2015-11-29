@@ -13,9 +13,6 @@
     - uwsgi-plugin-python
     - sudo
 
-- name: Use the pip package, version 13
-  pip: name="Twisted==13.0" state=present
-
 - name: Install init.d script for carbon-cache
   template: src=debian_carbon_service.j2 dest=/etc/init.d/carbon-cache
   notify: restart carbon-cache
