@@ -3,6 +3,10 @@
 - hosts: all
   pre_tasks:
 
+    - name: Make sure we have file installed
+      yum: name=file
+      when: ansible_os_family == "RedHat"
+
     # This is a hack because start-stop-daemon get a little confused
     # when we run this inside a container and "start-stop-daemon --start
     # --pidfile mypid --exec myexec --test" fails to correctly identify
