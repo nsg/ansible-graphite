@@ -20,7 +20,7 @@
     - libselinux-python
     - fontconfig
     - sudo
-    - pytz
+    - libffi-devel
 
 - name: Install Python Twisted | python-twisted
   yum: name=python-twisted
