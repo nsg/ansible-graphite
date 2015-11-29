@@ -1,4 +1,6 @@
 ---
+graphite_install_version: 0.9.15
+
 graphite_user:       graphite
 graphite_secret_key: UNSAFE_DEFAULT
 graphite_time_zone:  "UTC"
