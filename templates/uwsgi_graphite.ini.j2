@@ -1,6 +1,6 @@
 [uwsgi]
 processes = 2
-socket = 127.0.0.1:3031
+socket = {{ uwsgi_graphite_socket }}
 gid = {{ graphite_user }}
 uid = {{ graphite_user }}
 chdir = /opt/graphite/conf
