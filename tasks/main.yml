@@ -76,3 +76,9 @@
 
 - name: Remove temp file
   file: path=/tmp/createsuperuser.py state=absent
+
+- name: Enable uwsgi service
+  service: name=uwsgi enabled=yes
+
+- name: Enable carbon-cache service
+  service: name=carbon-cache enabled=yes
