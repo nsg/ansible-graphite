@@ -26,6 +26,8 @@ server {
 }
 ```
 
+The uwsgi socket can be configured through `uwsgi_graphite_socket`.
+
 Alternatively, you can define `uwsgi_graphite_extraopts` with additional uwsgi configuration, which can e.g. enable http on port 8080 or add basic auth:
 ```yaml
 uwsgi_graphite_extraopts:
