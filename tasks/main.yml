@@ -79,6 +79,7 @@
 
 - name: Enable uwsgi service
   service: name=uwsgi enabled=yes
+  notify: fix perms for storage
 
 - name: Enable carbon-cache service
   service: name=carbon-cache enabled=yes

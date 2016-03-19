@@ -5,3 +5,16 @@
 
 - name: restart uwsgi
   service: name=uwsgi state=restarted
+
+# Okay, something has changed in ansible or graphite,
+# The idempotence test failes because something inside
+# graphite_install_path has changed between two runs...
+# Maybe carbon writes writes someting as root when it
+# starts? Needs to be investigated, this is a temp
+# workaround for that.
+- name: fix perms for storag
+  file:
+    path: "{{ graphite_install_path }}/storage"
+    owner: "{{ graphite_user }}"
+    recurse: yes
+    state: directory
