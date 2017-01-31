@@ -20,7 +20,7 @@
 
 - name: Install systemd unit carbon-cache.service 
   template: src=debian_carbon_service_systemd.j2 dest=/etc/systemd/system/carbon-cache.service
-  when: ansible_distribution_release == "jessie"
+  when: ansible_distribution_release == "jessie" or ansible_distribution_release == "xenial"
   register: ccunit
 
 - name: Check the install scripts perms
@@ -31,7 +31,7 @@
 
 - name: Reload systemd if unit file has changed
   shell: 'systemctl daemon-reload'
-  when: ccunit.changed and ansible_distribution_release == "jessie"
+  when: ccunit.changed and ansible_distribution_release == "jessie" or ansible_distribution_release == "xenial"
   notify: restart carbon-cache
 
 - name: Install uwsgi graphite config
