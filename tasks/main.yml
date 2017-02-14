@@ -13,7 +13,7 @@
 
 - name: Setup graphite with pip
   pip: name={{ item }} state=present
-  with_items: graphite_install_requirements[graphite_install_version]
+  with_items: "{{ graphite_install_requirements[graphite_install_version] }}"
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
   notify: restart carbon-cache
