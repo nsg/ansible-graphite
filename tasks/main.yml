@@ -12,7 +12,7 @@
   when: ansible_os_family == "Debian"
 
 - name: Setup graphite with pip
-  pip: name={{ item }} state=present
+  pip: name={{ item }} state=present extra_args="--no-binary=:all:"
   with_items: "{{ graphite_install_requirements[graphite_install_version] }}"
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
