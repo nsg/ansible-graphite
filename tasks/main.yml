@@ -12,11 +12,20 @@
   when: ansible_os_family == "Debian"
 
 - name: Setup graphite with pip
-  pip: name={{ item }} state=present
-  with_items: graphite_install_requirements[graphite_install_version]
+  pip: name={{ item }} state=present extra_args="--no-binary=:all:"
+  with_items: "{{ graphite_install_requirements[graphite_install_version] }}"
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
   notify: restart carbon-cache
+  when: ansible_distribution_release == "xenial"
+
+- name: Setup graphite with pip
+  pip: name={{ item }} state=present 
+  with_items: "{{ graphite_install_requirements[graphite_install_version] }}"
+  environment:
+    PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
+  notify: restart carbon-cache
+  when: ansible_distribution_release != "xenial"
 
 - name: Set perms for graphite storage
   file: path={{ graphite_install_path }}/storage owner={{ graphite_user }} recurse=yes state=directory
