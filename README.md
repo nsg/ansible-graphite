@@ -42,20 +42,7 @@ uwsgi_graphite_extraopts:
 Role Variables
 --------------
 
-* `graphite_user` - The user that carbon and uwsgi is executed as, default: `graphite`
-* `graphite_secret_key` - Change this to a random string, default: `UNSAFE_DEFAULT`
-* `graphite_time_zone` - Select timezone, default: `America/Los_Angeles`
-* `graphite_admin_date_joined`, default: `"2014-07-21T10:11:17.464"`
-* `graphite_admin_email`, default: `"root@localhost"`
-* `graphite_admin_first_name`, default: `""`
-* `graphite_admin_last_name`, default: `""`
-* `graphite_admin_last_login`, default: `"2014-07-21T10:11:17.464"`
-* `graphite_admin_username`, default: `"admin"`
-* `graphite_admin_password`, default: `"admin"`
-
-The default is "60s:1d" (1 day data), this will keep data for 5 years.
-If you log a lot of data, you may need to restrict this to a shorter time.
-* `graphite_storage_schemas_default_retentions`, default: `"10s:14d,1m:90d,30m:1y,1h:5y"`
+See: [defaults/main.yml](https://github.com/nsg/ansible-graphite/blob/master/defaults/main.yml)
 
 Example Playbook
 -------------------------
@@ -65,8 +52,6 @@ Example Playbook
       roles:
          - { role: nsg.graphite, graphite_secret_key: 'dgdgdfgasg' }
 ```
-
-... or place graphite_secret_key in group_vars, host_vars, inventory...
 
 License
 -------
