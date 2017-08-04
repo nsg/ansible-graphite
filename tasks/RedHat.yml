@@ -32,6 +32,19 @@
   template:
     src: redhat_carbon_service.j2
     dest: /etc/init.d/carbon-cache
+  when: ansible_distribution_major_version|int < 7
+  notify: restart carbon-cache
+
+- name: Install systemd unit carbon-cache.service
+  template:
+    src: carbon_service_systemd.j2
+    dest: /etc/systemd/system/carbon-cache.service
+  when: ansible_distribution_major_version|int >= 7
+  register: ccunit
+
+- name: Reload systemd if unit file has changed
+  shell: systemctl daemon-reload
+  when: ccunit|changed
   notify: restart carbon-cache
 
 - name: Install uwsgi default settings
@@ -50,6 +63,19 @@
   template:
     src: redhat_uwsgi_service.j2
     dest: /etc/init.d/uwsgi
+  when: ansible_distribution_major_version|int < 7
+  notify: restart uwsgi
+
+- name: Install systemd unit uwsgi.service
+  template:
+    src: uwsgi_systemd.j2
+    dest: /etc/systemd/system/uwsgi.service
+  when: ansible_distribution_major_version|int >= 7
+  register: uwsgiunit
+
+- name: Reload systemd if unit file has changed
+  shell: systemctl daemon-reload
+  when: uwsgiunit|changed
   notify: restart uwsgi
 
 - name: Check the install scripts perms
@@ -58,6 +84,7 @@
     mode: 0755
     owner: root
     group: root
+  when: ansible_distribution_major_version|int < 7
   with_items:
     - carbon-cache
     - uwsgi
