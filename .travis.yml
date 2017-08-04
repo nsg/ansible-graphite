@@ -6,7 +6,7 @@ language: python
 
 env:
   global:
-    - CONTAINER_IMAGES="images:centos/6 images:centos/7 images:debian/wheezy images:debian/jessie images:debian/stretch ubuntu:14.04 ubuntu:16.04"
+    - CONTAINER_IMAGES="images:centos/6 images:centos/7 images:debian/jessie images:debian/stretch ubuntu:14.04 ubuntu:16.04"
   matrix:
     - ANSIBLE_VERSIONS="2.1.6"
     - ANSIBLE_VERSIONS="2.2.3"

@@ -20,17 +20,13 @@
     src: debian_carbon_service.j2
     dest: /etc/init.d/carbon-cache
   notify: restart carbon-cache
-  when: >
-    ansible_distribution_release == "wheezy"
-    or ansible_distribution_release == "trusty"
+  when: ansible_distribution_release == "trusty"
 
 - name: Install systemd unit carbon-cache.service
   template:
     src: carbon_service_systemd.j2
     dest: /etc/systemd/system/carbon-cache.service
-  when: >
-    not (ansible_distribution_release == "wheezy"
-    or ansible_distribution_release == "trusty")
+  when: ansible_distribution_release != "trusty"
   register: ccunit
 
 - name: Reload systemd if unit file has changed
@@ -46,9 +42,7 @@
     group: root
   with_items:
     - carbon-cache
-  when: >
-    ansible_distribution_release == "wheezy"
-    or ansible_distribution_release == "trusty"
+  when: ansible_distribution_release == "trusty"
 
 - name: Install uwsgi graphite config
   template:
