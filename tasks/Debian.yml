@@ -15,6 +15,11 @@
     - sudo
     - libffi-dev
 
+- name: "Install Twisted 16.0.0 on trusty (never versions req a newer python-openssl)"
+  pip:
+    name: "Twisted==16.0.0"
+  when: ansible_distribution_release == "trusty"
+
 - name: Install init.d script for carbon-cache
   template:
     src: debian_carbon_service.j2
