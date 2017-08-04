@@ -3,14 +3,14 @@
 - hosts: all
   pre_tasks:
 
-    - name: Install a few packages for the tests
+    - name: RedHat | Install a few packages for the tests
       yum: name={{ item }}
       with_items:
         - file
         - nc
       when: ansible_os_family == "RedHat"
 
-    - name: Install a few packages for the tests
+    - name: Debian | Install a few packages for the tests
       apt: name={{ item }}
       with_items:
         - netcat
