@@ -3,52 +3,81 @@
 # Install graphite
 
 - name: Create user
-  user: name={{ graphite_user }} comment="Graphite user" state=present
+  user:
+    name: "{{ graphite_user }}"
+    comment: "Graphite user"
 
-- include: RedHat.yml
+- name: "Run tasks on a RedHat based system"
+  include: RedHat.yml
   when: ansible_os_family == "RedHat"
 
-- include: Debian.yml
+- name: "Run tasks on a Debian based system"
+  include: Debian.yml
   when: ansible_os_family == "Debian"
 
+# Newer versions of pip needs --no-binary=:all: for graphite
+# ref: https://github.com/graphite-project/graphite-web/issues/1508
 - name: Setup graphite with pip
-  pip: name={{ item }} state=present extra_args="--no-binary=:all:"
+  pip:
+    name: "{{ item }}"
+    extra_args: "--no-binary=:all:"
   with_items: "{{ graphite_install_requirements[graphite_install_version] }}"
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
+  register: graphite_installed_new
   notify: restart carbon-cache
-  when: ansible_distribution_release == "xenial"
+  when: >
+    ansible_distribution_release == "xenial"
+    or ansible_distribution_release == "stretch"
 
 - name: Setup graphite with pip
-  pip: name={{ item }} state=present 
+  pip:
+    name: "{{ item }}"
   with_items: "{{ graphite_install_requirements[graphite_install_version] }}"
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
+  register: graphite_installed_old
   notify: restart carbon-cache
-  when: ansible_distribution_release != "xenial"
+  when: >
+    ansible_distribution_release != "xenial"
+    and ansible_distribution_release != "stretch"
 
 - name: Set perms for graphite storage
-  file: path={{ graphite_install_path }}/storage owner={{ graphite_user }} recurse=yes state=directory
+  file:
+    path: "{{ graphite_install_path }}/storage"
+    owner: "{{ graphite_user }}"
+    recurse: yes
+    state: directory
+  when: graphite_installed_old|changed or graphite_installed_new|changed
 
 - name: Install webapp settings
-  template: src=local_settings.py.j2 dest={{ graphite_install_path }}/webapp/graphite/local_settings.py
+  template:
+    src: local_settings.py.j2
+    dest: "{{ graphite_install_path }}/webapp/graphite/local_settings.py"
   notify: restart carbon-cache
 
 - name: Install carbon settings
-  template: src=carbon.conf.j2 dest={{ graphite_install_path }}/conf/carbon.conf
+  template:
+    src: carbon.conf.j2
+    dest: "{{ graphite_install_path }}/conf/carbon.conf"
   notify: restart carbon-cache
 
 - name: Install storage schemas
-  template: src=storage-schemas.conf.j2 dest={{ graphite_install_path }}/conf/storage-schemas.conf
+  template:
+    src: storage-schemas.conf.j2
+    dest: "{{ graphite_install_path }}/conf/storage-schemas.conf"
   notify: restart carbon-cache
 
 - name: Install uwsgi configuration
-  template: src=wsgi.py.j2 dest={{ graphite_install_path }}/conf/wsgi.py
+  template:
+    src: wsgi.py.j2
+    dest: "{{ graphite_install_path }}/conf/wsgi.py"
   notify: restart carbon-cache
 
 - name: Inspect graphite db
   command: python {{ graphite_install_path }}/webapp/graphite/manage.py inspectdb
-  sudo_user: "{{ graphite_user }}"
+  become: yes
+  become_user: "{{ graphite_user }}"
   register: result
   changed_when: False
 
@@ -59,35 +88,54 @@
 
 - name: Sync/create database
   command: python {{ graphite_install_path }}/webapp/graphite/manage.py syncdb --noinput
-  sudo_user: "{{ graphite_user }}"
+  become: yes
+  become_user: "{{ graphite_user }}"
   when: result.stdout.find("AccountMygraph") == -1
 
 - name: Create superuser account
-  command: python {{ graphite_install_path }}/webapp/graphite/manage.py createsuperuser --username={{ graphite_admin_username }} --email={{ graphite_admin_email }} --noinput
-  sudo_user: "{{ graphite_user }}"
+  command: >
+    python {{ graphite_install_path }}/webapp/graphite/manage.py createsuperuser
+    --username={{ graphite_admin_username }}
+    --email={{ graphite_admin_email }}
+    --noinput
+  become: yes
+  become_user: "{{ graphite_user }}"
   register: superuser_created
   args:
     creates: "{{ graphite_install_path }}/webapp/graphite/.superuser_created"
 
 - name: Prepare to set up superuser password
-  template: src=createsuperuser.py.j2 dest=/tmp/createsuperuser.py
+  template:
+    src: createsuperuser.py.j2
+    dest: /tmp/createsuperuser.py
   when: superuser_created|changed
   register: debug2
 
 - name: Set superuser password
-  shell: "python {{ graphite_install_path }}/webapp/graphite/manage.py shell < /tmp/createsuperuser.py"
-  sudo_user: "{{ graphite_user }}"
+  shell: >
+    python {{ graphite_install_path }}/webapp/graphite/manage.py
+    shell < /tmp/createsuperuser.py
+  become: yes
+  become_user: "{{ graphite_user }}"
   when: superuser_created|changed
 
 - name: Create lock file
-  file: path="{{ graphite_install_path }}/webapp/graphite/.superuser_created" state=touch
+  file:
+    path: "{{ graphite_install_path }}/webapp/graphite/.superuser_created"
+    state: touch
   when: superuser_created|changed
 
 - name: Remove temp file
-  file: path=/tmp/createsuperuser.py state=absent
+  file:
+    path: /tmp/createsuperuser.py
+    state: absent
 
 - name: Enable uwsgi service
-  service: name=uwsgi enabled=yes
+  service:
+    name: uwsgi
+    enabled: yes
 
 - name: Enable carbon-cache service
-  service: name=carbon-cache enabled=yes
+  service:
+    name: carbon-cache
+    enabled: yes

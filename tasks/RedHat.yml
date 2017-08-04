@@ -1,15 +1,12 @@
 ---
 
-- name: Install EPEL repository from fedoraproject.org
-  yum: name=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-  when: ansible_distribution_version.split(".")[0]|int < 7
-
 - name: Install EPEL repository from repo
-  yum: name=epel-release
-  when: ansible_distribution_version.split(".")[0]|int >= 7
+  yum:
+    name: epel-release
 
 - name: Install packages with yum
-  yum: name={{ item }} state=present
+  yum:
+    name: "{{ item }}"
   with_items:
     - python-pip
     - python-devel
@@ -23,30 +20,71 @@
     - libffi-devel
 
 - name: "Install Twisted 15.3.0 on 6.x (never versions req python 2.7)"
-  pip: name=Twisted==15.3.0
-  when: ansible_distribution_version.split(".")[0]|int < 7
+  pip:
+    name: "Twisted==15.3.0"
+  when: ansible_distribution_major_version|int < 7
 
 - name: Install uwsgi with pip
-  pip: name=uwsgi state=present
+  pip:
+    name: uwsgi
 
 - name: Install carbon-cache init.d script
-  template: src=redhat_carbon_service.j2 dest=/etc/init.d/carbon-cache
+  template:
+    src: redhat_carbon_service.j2
+    dest: /etc/init.d/carbon-cache
+  when: ansible_distribution_major_version|int < 7
+  notify: restart carbon-cache
+
+- name: Install systemd unit carbon-cache.service
+  template:
+    src: carbon_service_systemd.j2
+    dest: /etc/systemd/system/carbon-cache.service
+  when: ansible_distribution_major_version|int >= 7
+  register: ccunit
+
+- name: Reload systemd if unit file has changed
+  shell: systemctl daemon-reload
+  when: ccunit|changed
   notify: restart carbon-cache
 
 - name: Install uwsgi default settings
-  template: src=redhat_uwsgi_default.ini.j2 dest=/etc/uwsgi_default.ini
+  template:
+    src: redhat_uwsgi_default.ini.j2
+    dest: /etc/uwsgi_default.ini
   notify: restart uwsgi
 
 - name: Install uwsgi graphite config
-  template: src=uwsgi_graphite.ini.j2 dest=/etc/uwsgi_graphite.ini
+  template:
+    src: uwsgi_graphite.ini.j2
+    dest: /etc/uwsgi_graphite.ini
   notify: restart uwsgi
 
 - name: Install uwsgi init.d script
-  template: src=redhat_uwsgi_service.j2 dest=/etc/init.d/uwsgi
+  template:
+    src: redhat_uwsgi_service.j2
+    dest: /etc/init.d/uwsgi
+  when: ansible_distribution_major_version|int < 7
+  notify: restart uwsgi
+
+- name: Install systemd unit uwsgi.service
+  template:
+    src: uwsgi_systemd.j2
+    dest: /etc/systemd/system/uwsgi.service
+  when: ansible_distribution_major_version|int >= 7
+  register: uwsgiunit
+
+- name: Reload systemd if unit file has changed
+  shell: systemctl daemon-reload
+  when: uwsgiunit|changed
   notify: restart uwsgi
 
 - name: Check the install scripts perms
-  file: path=/etc/init.d/{{ item }} mode=0755 owner=root group=root
+  file:
+    path: /etc/init.d/{{ item }}
+    mode: 0755
+    owner: root
+    group: root
+  when: ansible_distribution_major_version|int < 7
   with_items:
     - carbon-cache
     - uwsgi
