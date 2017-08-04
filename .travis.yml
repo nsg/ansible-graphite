@@ -3,23 +3,21 @@
 sudo: required
 dist: trusty
 language: python
-services:
-  - docker
 
 env:
   global:
-    - ANSIBLE_HOST_KEY_CHECKING=False
+    - CONTAINER_IMAGES="images:centos/6 images:centos/7 images:debian/jessie images:debian/stretch ubuntu:14.04 ubuntu:16.04"
   matrix:
-    - TEST_OSVER="debian:7"
-    - TEST_OSVER="debian:8"
-    - TEST_OSVER="ubuntu:1404"
-    - TEST_OSVER="centos:6"
-    - TEST_OSVER="centos:7"
+    - ANSIBLE_VERSIONS="1.8.4"
+    - ANSIBLE_VERSIONS="1.9.6"
+    - ANSIBLE_VERSIONS="2.1.6"
+    - ANSIBLE_VERSIONS="latest"
 
 install:
   # Download ansible-role-tester and setup the enviroment
-  - wget https://raw.githubusercontent.com/nsg/ansible-role-tester/master/test/test.sh
+  - wget https://raw.githubusercontent.com/nsg/ansible-role-tester/master/test.sh
   - chmod +x test.sh
+  - ./test.sh install
 
 script:
-  - ./test.sh $TEST_OSVER
+  - ./test.sh test
