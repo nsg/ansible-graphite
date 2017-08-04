@@ -70,7 +70,8 @@
 
 - name: Inspect graphite db
   command: python {{ graphite_install_path }}/webapp/graphite/manage.py inspectdb
-  sudo_user: "{{ graphite_user }}"
+  become: yes
+  become_user: "{{ graphite_user }}"
   register: result
   changed_when: False
 
@@ -81,7 +82,8 @@
 
 - name: Sync/create database
   command: python {{ graphite_install_path }}/webapp/graphite/manage.py syncdb --noinput
-  sudo_user: "{{ graphite_user }}"
+  become: yes
+  become_user: "{{ graphite_user }}"
   when: result.stdout.find("AccountMygraph") == -1
 
 - name: Create superuser account
@@ -90,7 +92,8 @@
     --username={{ graphite_admin_username }}
     --email={{ graphite_admin_email }}
     --noinput
-  sudo_user: "{{ graphite_user }}"
+  become: yes
+  become_user: "{{ graphite_user }}"
   register: superuser_created
   args:
     creates: "{{ graphite_install_path }}/webapp/graphite/.superuser_created"
@@ -106,7 +109,8 @@
   shell: >
     python {{ graphite_install_path }}/webapp/graphite/manage.py
     shell < /tmp/createsuperuser.py
-  sudo_user: "{{ graphite_user }}"
+  become: yes
+  become_user: "{{ graphite_user }}"
   when: superuser_created|changed
 
 - name: Create lock file
