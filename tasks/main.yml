@@ -22,6 +22,7 @@
   with_items: "{{ graphite_install_requirements[graphite_install_version] }}"
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
+  register: graphite_installed
   notify: restart carbon-cache
   when: ansible_distribution_release == "xenial"
 
@@ -31,6 +32,7 @@
   with_items: "{{ graphite_install_requirements[graphite_install_version] }}"
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
+  register: graphite_installed
   notify: restart carbon-cache
   when: ansible_distribution_release != "xenial"
 
@@ -40,6 +42,7 @@
     owner: "{{ graphite_user }}"
     recurse: yes
     state: directory
+  when: graphite_installed|changed
 
 - name: Install webapp settings
   template:
