@@ -17,9 +17,9 @@
         dest: /etc/nginx/conf.d/graphite.conf
 
     - name: Start nginx
-      service: name=nginx state=started
-
-    # Ready to check the installation
+      service:
+        name: nginx
+        state: restarted
 
     - name: Make sure processes are running
       shell: "pgrep {{ item }}"

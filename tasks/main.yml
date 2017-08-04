@@ -15,6 +15,8 @@
   include: Debian.yml
   when: ansible_os_family == "Debian"
 
+# Newer versions of pip needs --no-binary=:all: for graphite
+# ref: https://github.com/graphite-project/graphite-web/issues/1508
 - name: Setup graphite with pip
   pip:
     name: "{{ item }}"
@@ -22,9 +24,11 @@
   with_items: "{{ graphite_install_requirements[graphite_install_version] }}"
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
-  register: graphite_installed
+  register: graphite_installed_new
   notify: restart carbon-cache
-  when: ansible_distribution_release == "xenial"
+  when: >
+    ansible_distribution_release == "xenial"
+    or ansible_distribution_release == "stretch"
 
 - name: Setup graphite with pip
   pip:
@@ -32,9 +36,11 @@
   with_items: "{{ graphite_install_requirements[graphite_install_version] }}"
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
-  register: graphite_installed
+  register: graphite_installed_old
   notify: restart carbon-cache
-  when: ansible_distribution_release != "xenial"
+  when: >
+    ansible_distribution_release != "xenial"
+    and ansible_distribution_release != "stretch"
 
 - name: Set perms for graphite storage
   file:
@@ -42,7 +48,7 @@
     owner: "{{ graphite_user }}"
     recurse: yes
     state: directory
-  when: graphite_installed|changed
+  when: graphite_installed_old|changed or graphite_installed_new|changed
 
 - name: Install webapp settings
   template:
