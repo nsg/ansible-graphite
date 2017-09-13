@@ -102,3 +102,33 @@ graphite_aggregator_write_back_frequency: 0
 # Optional extra options for uwsgi_graphite.ini
 uwsgi_graphite_extraopts: []
 uwsgi_graphite_socket: '127.0.0.1:3031'
+
+graphite_install_path: "/opt/graphite"
+graphite_install_requirements:
+  # List based on requirements.txt from https://github.com/graphite-project/graphite-web
+  # All versions are frozen to make it future-proof.
+  0.9.15:
+    - Django==1.4
+    - python-memcached==1.47
+    - txAMQP==0.4
+    - simplejson==2.1.6
+    - django-tagging==0.3.1
+    - gunicorn==19.6.0
+    - pytz==2016.7
+    - cairocffi==0.7.2
+    - whisper==0.9.13
+    - whitenoise==3.2.2
+    - graphite-web==0.9.15
+    - carbon==0.9.15
+  1.0.2:
+    - Django==1.11
+    - django-tagging==0.4.3
+    - cairocffi==0.8.0
+    - pytz==2017.2
+    - scandir==1.5
+    - python-memcached==1.47
+    - txAMQP==0.6.2
+    - gunicorn==19.7.0
+    - graphite-web==1.0.2
+    - carbon==1.0.2
+    - whisper==1.0.2
