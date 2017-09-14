@@ -5,6 +5,11 @@ nsg.graphite
 
 This role installs graphite, I choose to install graphite from pip because the packages in the distributions repositories are old and features are missing. I’m using apt/yum when possible.
 
+Galaxy
+------
+
+The Role in [Ansible Galaxy](https://galaxy.ansible.com/nsg/graphite/) is old and unmaintained because [invasive permissions asked by Ansible](https://github.com/ansible/galaxy-issues/issues/159).
+
 Requirements
 ------------
 
@@ -43,6 +48,12 @@ Role Variables
 --------------
 
 See: [defaults/main.yml](https://github.com/nsg/ansible-graphite/blob/master/defaults/main.yml)
+
+Supported Graphite versions
+---------------------------
+
+0.9.15 and 1.0.2, choose version with `graphite_install_version`. 0.9.x will be removed in the future.
+
 
 Example Playbook
 -------------------------
