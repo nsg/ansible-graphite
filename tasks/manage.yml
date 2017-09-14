@@ -1,0 +1,52 @@
+---
+
+- name: manage.py - Inspect graphite db
+  command: python {{ graphite_install_path }}/webapp/graphite/manage.py inspectdb
+  become: yes
+  become_user: "{{ graphite_user }}"
+  register: result
+  changed_when: False
+
+- name: manage.py - Check for secret key warning
+  command: echo SECRET_KEY is set to an unsafe default.
+  failed_when: "'SECRET_KEY' in result.stderr"
+  changed_when: False
+
+- name: manage.py - Sync/create database
+  command: python {{ graphite_install_path }}/webapp/graphite/manage.py syncdb --noinput
+  become: yes
+  become_user: "{{ graphite_user }}"
+  when: result.stdout.find("AccountMygraph") == -1
+
+- name: manage.py - Create superuser account
+  command: >
+    python {{ graphite_install_path }}/webapp/graphite/manage.py createsuperuser
+    --username={{ graphite_admin_username }}
+    --email={{ graphite_admin_email }}
+    --noinput
+  become: yes
+  become_user: "{{ graphite_user }}"
+  register: superuser_created
+  args:
+    creates: "{{ graphite_install_path }}/webapp/graphite/.superuser_created"
+
+- name: manage.py - Prepare to set up superuser password
+  template:
+    src: createsuperuser.py.j2
+    dest: /tmp/createsuperuser.py
+  when: superuser_created|changed
+  register: debug2
+
+- name: manage.py - Set superuser password
+  shell: >
+    python {{ graphite_install_path }}/webapp/graphite/manage.py
+    shell < /tmp/createsuperuser.py
+  become: yes
+  become_user: "{{ graphite_user }}"
+  when: superuser_created|changed
+
+- name: manage.py - Create lock file
+  file:
+    path: "{{ graphite_install_path }}/webapp/graphite/.superuser_created"
+    state: touch
+  when: superuser_created|changed
