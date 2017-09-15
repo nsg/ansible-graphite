@@ -22,7 +22,7 @@
 
 - name: Debian Jessie and 1.0.2+ | cffi needs to be updated to a newer version
   pip:
-    name: cffi
+    name: "cffi==1.10.0"
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
   when: >
