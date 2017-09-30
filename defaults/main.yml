@@ -1,5 +1,5 @@
 ---
-graphite_install_version: 0.9.15
+graphite_install_version: 1.0.2
 
 graphite_user: graphite
 graphite_secret_key: UNSAFE_DEFAULT
