@@ -20,6 +20,15 @@
     name: "Twisted==16.0.0"
   when: ansible_distribution_release == "trusty"
 
+- name: Debian Jessie and 1.0.2+ | cffi needs to be updated to a newer version
+  pip:
+    name: "cffi==1.10.0"
+  environment:
+    PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
+  when: >
+    ansible_distribution_release == "jessie" and
+    graphite_install_version | version_compare("1.0.2", ">=")
+
 - name: Install init.d script for carbon-cache
   template:
     src: debian_carbon_service.j2

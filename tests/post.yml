@@ -53,6 +53,7 @@
         regexp: "{{ item }}"
       with_items:
         - "creating database file.*errors.wsp"
+        - "creating database metric carbon.agents.*errors"
         - "new metric carbon.agents.*a.errors matched schema carbon"
         - "new metric carbon.agents.*a.errors matched aggregation schema default"
       failed_when: False
