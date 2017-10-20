@@ -5,6 +5,10 @@ graphite_user: graphite
 graphite_secret_key: UNSAFE_DEFAULT
 graphite_time_zone: UTC
 
+graphite_enable_uwsgi: True
+graphite_enable_carbon_cache: True
+graphite_enable_carbon_relay: False
+
 graphite_admin_date_joined: "2014-07-21T10:11:17.464"
 graphite_admin_email: "root@example.com"
 graphite_admin_first_name: ""

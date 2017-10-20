@@ -25,7 +25,7 @@
 
 - name: Install systemd unit carbon-cache.service
   template:
-    src: carbon_service_systemd.j2
+    src: carbon_cache_systemd.j2
     dest: /etc/systemd/system/carbon-cache.service
   register: ccunit
 
@@ -33,6 +33,17 @@
   shell: systemctl daemon-reload
   when: ccunit|changed
   notify: restart carbon-cache
+
+- name: Install systemd unit carbon-relay.service
+  template:
+    src: carbon_relay_systemd.j2
+    dest: /etc/systemd/system/carbon-relay.service
+  register: ccunit
+
+- name: Reload systemd if unit file has changed
+  shell: systemctl daemon-reload
+  when: ccunit|changed
+  notify: restart carbon-relay
 
 - name: Install uwsgi default settings
   template:
