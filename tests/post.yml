@@ -41,8 +41,7 @@
       shell: echo "local.random.diceroll 4711 $(date +%s)" | nc -w 2 0.0.0.0 2003
 
     - name: Wait 5 sec
-      pause:
-        seconds: 5
+      command: sleep 5 # pause failes on centos 7 for some reason
 
     - name: Search for the value from graphite-web
       shell: "curl -s 'http://localhost:8080/render/?_salt=1448817576.96&target=local.random.diceroll&format=csv' | grep ',4711.0'"
