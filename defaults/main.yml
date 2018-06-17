@@ -59,6 +59,7 @@ graphite_cache_pickle_receiver_interface: 0.0.0.0
 graphite_cache_pickle_receiver_port: 2004
 graphite_cache_udp_receiver_interface: 0.0.0.0
 graphite_cache_udp_receiver_port: 2003
+graphite_cache_graphite_url: false  # Set to http://my-graphite-url:port
 graphite_cache_use_flow_control: true
 graphite_cache_use_insecure_unpickler: false
 graphite_cache_use_whitelist: false

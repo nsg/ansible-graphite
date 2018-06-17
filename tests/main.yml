@@ -7,3 +7,4 @@
     - role: ansible-graphite
       graphite_secret_key: testtest123
       graphite_install_version: "{{ version }}"
+      graphite_cache_graphite_url: 'http://127.0.0.1:8080'

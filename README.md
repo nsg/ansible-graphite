@@ -66,7 +66,9 @@ Example Playbook
 ```
     - hosts: servers
       roles:
-         - { role: nsg.graphite, graphite_secret_key: 'dgdgdfgasg' }
+         - role: nsg.graphite
+           graphite_secret_key: 'dgdgdfgasg'
+           graphite_cache_graphite_url: 'http://127.0.0.1:8080'
 ```
 
 License
