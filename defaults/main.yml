@@ -42,7 +42,6 @@ graphite_cache_line_receiver_port: 2003
 graphite_cache_local_data_dir: /opt/graphite/storage/whisper
 graphite_cache_log_cache_hits: false
 graphite_cache_log_cache_queue_sorts: true
-graphite_cache_log_listener_connections: true
 graphite_cache_log_updates: false
 graphite_cache_log_creates: false
 graphite_cache_enable_manhole: false
@@ -74,7 +73,6 @@ graphite_relay_carbon_metric_prefix: carbon
 graphite_relay_destinations: 127.0.0.1:2004
 graphite_relay_line_receiver_interface: 0.0.0.0
 graphite_relay_line_receiver_port: 2013
-graphite_relay_log_listener_connections: true
 graphite_relay_max_datapoints_per_message: 500
 graphite_relay_max_queue_size: 10000
 graphite_relay_min_reset_interval: 121
@@ -97,7 +95,6 @@ graphite_aggregator_destinations: 127.0.0.1:2004
 graphite_aggregator_forward_all: true
 graphite_aggregator_line_receiver_interface: 0.0.0.0
 graphite_aggregator_line_receiver_port: 2023
-graphite_aggregator_log_listener_connections: true
 graphite_aggregator_max_aggregation_intervals: 5
 graphite_aggregator_max_datapoints_per_message: 500
 graphite_aggregator_max_queue_size: 10000
@@ -117,19 +114,6 @@ graphite_install_path: "/opt/graphite"
 graphite_install_requirements:
   # List based on requirements.txt from https://github.com/graphite-project/graphite-web
   # All versions are frozen to make it future-proof.
-  0.9.15:
-    - Django==1.4
-    - python-memcached==1.47
-    - txAMQP==0.4
-    - simplejson==2.1.6
-    - django-tagging==0.3.1
-    - gunicorn==19.6.0
-    - pytz==2016.7
-    - cairocffi==0.7.2
-    - whisper==0.9.13
-    - whitenoise==3.2.2
-    - graphite-web==0.9.15
-    - carbon==0.9.15
   1.0.2:
     - Django==1.9.13
     - django-tagging==0.4.3

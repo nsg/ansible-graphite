@@ -57,7 +57,7 @@ See: [defaults/main.yml](https://github.com/nsg/ansible-graphite/blob/master/def
 Supported Graphite versions
 ---------------------------
 
-0.9.15 and 1.0.2, choose version with `graphite_install_version`. 0.9.x will be removed in the future.
+1.0.2 and 1.1.3, choose version with `graphite_install_version`.
 
 
 Example Playbook
