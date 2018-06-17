@@ -33,6 +33,7 @@ graphite_cache_cache_query_port: 7002
 graphite_cache_cache_write_strategy: sorted
 graphite_cache_carbon_metric_interval: 60
 graphite_cache_carbon_metric_prefix: carbon
+graphite_cache_database: whisper
 graphite_cache_enable_amqp: false
 graphite_cache_enable_log_rotation: true
 graphite_cache_enable_udp_listener: false
@@ -43,6 +44,7 @@ graphite_cache_log_cache_hits: false
 graphite_cache_log_cache_queue_sorts: true
 graphite_cache_log_listener_connections: true
 graphite_cache_log_updates: false
+graphite_cache_log_creates: false
 graphite_cache_enable_manhole: false
 graphite_cache_manhole_interface: 127.0.0.1
 graphite_cache_manhole_port: 7222
@@ -52,6 +54,7 @@ graphite_cache_max_cache_size: inf
 graphite_cache_max_creates_per_minute: 50
 graphite_cache_max_updates_per_second: 500
 graphite_cache_max_updates_per_second_on_shutdown: 1000
+graphite_cache_min_timestamp_resolution: 1
 graphite_cache_pickle_receiver_interface: 0.0.0.0
 graphite_cache_pickle_receiver_port: 2004
 graphite_cache_udp_receiver_interface: 0.0.0.0
@@ -73,13 +76,19 @@ graphite_relay_line_receiver_port: 2013
 graphite_relay_log_listener_connections: true
 graphite_relay_max_datapoints_per_message: 500
 graphite_relay_max_queue_size: 10000
+graphite_relay_min_reset_interval: 121
+graphite_relay_min_reset_ratio: '0.9'
+graphite_relay_min_reset_stat_flow: 1000
 graphite_relay_pickle_receiver_interface: 0.0.0.0
 graphite_relay_pickle_receiver_port: 2014
 graphite_relay_relay_method: rules
 graphite_relay_replication_factor: 1
+graphite_relay_time_to_defer_sending: '0.0001'
 graphite_relay_use_flow_control: true
+graphite_relay_use_ratio_reset: false
 graphite_relay_use_whitelist: false
 # graphite_relay_user:
+graphite_relay_queue_low_watermark_pct: '0.8'
 
 graphite_aggregator_carbon_metric_interval: 60
 graphite_aggregator_carbon_metric_prefix: carbon
