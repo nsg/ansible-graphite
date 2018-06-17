@@ -38,11 +38,11 @@
 
     - name: Get set config file parameters
       shell: "grep -vE '^#' /opt/graphite/conf/carbon.conf | awk '/=/{ print $1 }'"
-      register: carbon_conf_default_params
+      register: carbon_conf_params
 
     - name: Make sure that carbon.conf is not using params not found in the example file
       shell: "grep '{{ item }}' /opt/graphite/conf/carbon.conf.example"
-      with_items: "{{ carbon_conf_default_params.stdout_lines }}"
+      with_items: "{{ carbon_conf_params.stdout_lines }}"
 
     - name: "Make sure we have a Graphite install at localhost:8080"
       shell: "curl -s http://localhost:8080 | grep 'Graphite Browser'"
