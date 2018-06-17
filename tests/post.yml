@@ -31,6 +31,9 @@
     - name: "Make sure we have a Graphite install at localhost:8080"
       shell: "curl -s http://localhost:8080 | grep 'Graphite Browser'"
 
+    - name: "Make sure that the static content works"
+      shell: "curl -s http://localhost:8080/static/js/composer.js"
+
     - name: Download a sample graph
       shell: "curl -so out 'http://localhost:8080/render/?width=586&height=308&_salt=1448804805.156&target=carbon.agents.*-a.cache.size'"
 
