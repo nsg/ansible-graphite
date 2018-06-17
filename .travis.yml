@@ -9,13 +9,11 @@ env:
     - CONTAINER_IMAGES="images:centos/7 images:debian/jessie images:debian/stretch ubuntu:14.04 ubuntu:16.04"
   matrix:
 
-    - ANSIBLE_VERSIONS="2.1.6" ANSIBLE_EXTRA_VARS_LIST="version=0.9.15"
-    - ANSIBLE_VERSIONS="2.2.3" ANSIBLE_EXTRA_VARS_LIST="version=0.9.15"
-    - ANSIBLE_VERSIONS="latest" ANSIBLE_EXTRA_VARS_LIST="version=0.9.15"
+    - ANSIBLE_VERSIONS="2.4.4" ANSIBLE_EXTRA_VARS_LIST="version=1.0.2"
+    - ANSIBLE_VERSIONS="2.5.4" ANSIBLE_EXTRA_VARS_LIST="version=1.0.2"
 
-    - ANSIBLE_VERSIONS="2.1.6" ANSIBLE_EXTRA_VARS_LIST="version=1.0.2"
-    - ANSIBLE_VERSIONS="2.2.3" ANSIBLE_EXTRA_VARS_LIST="version=1.0.2"
-    - ANSIBLE_VERSIONS="latest" ANSIBLE_EXTRA_VARS_LIST="version=1.0.2"
+    - ANSIBLE_VERSIONS="2.4.4" ANSIBLE_EXTRA_VARS_LIST="version=1.1.3"
+    - ANSIBLE_VERSIONS="2.5.4" ANSIBLE_EXTRA_VARS_LIST="version=1.1.3"
 
 install:
   # Download ansible-role-tester and setup the enviroment

@@ -24,9 +24,14 @@ server {
   access_log /var/log/nginx/graphite.access.log;
   error_log /var/log/nginx/graphite.error.log;
 
+  location /static {
+    alias /opt/graphite/webapp/content;
+    expires max;
+  }
+
   location / {
-  include uwsgi_params;
-  uwsgi_pass 127.0.0.1:3031;
+    include uwsgi_params;
+    uwsgi_pass 127.0.0.1:3031;
   }
 }
 ```
@@ -52,7 +57,7 @@ See: [defaults/main.yml](https://github.com/nsg/ansible-graphite/blob/master/def
 Supported Graphite versions
 ---------------------------
 
-0.9.15 and 1.0.2, choose version with `graphite_install_version`. 0.9.x will be removed in the future.
+1.0.2 and 1.1.3, choose version with `graphite_install_version`.
 
 
 Example Playbook
@@ -61,7 +66,9 @@ Example Playbook
 ```
     - hosts: servers
       roles:
-         - { role: nsg.graphite, graphite_secret_key: 'dgdgdfgasg' }
+         - role: nsg.graphite
+           graphite_secret_key: 'dgdgdfgasg'
+           graphite_cache_graphite_url: 'http://127.0.0.1:8080'
 ```
 
 License

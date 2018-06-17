@@ -28,8 +28,27 @@
         - uwsgi
         - nginx
 
+    - name: Get sample config file parameters
+      shell: "grep -vE '^#' /opt/graphite/conf/carbon.conf.example | awk -F '=' '/=/{ print $1 }'"
+      register: carbon_conf_example_default_params
+
+    - name: Make sure that we have set all default params in carbon.conf
+      shell: "grep -E '^{{ item }}' /opt/graphite/conf/carbon.conf"
+      with_items: "{{ carbon_conf_example_default_params.stdout_lines }}"
+
+    - name: Get set config file parameters
+      shell: "grep -vE '^#' /opt/graphite/conf/carbon.conf | awk '/=/{ print $1 }'"
+      register: carbon_conf_params
+
+    - name: Make sure that carbon.conf is not using params not found in the example file
+      shell: "grep '{{ item }}' /opt/graphite/conf/carbon.conf.example"
+      with_items: "{{ carbon_conf_params.stdout_lines }}"
+
     - name: "Make sure we have a Graphite install at localhost:8080"
       shell: "curl -s http://localhost:8080 | grep 'Graphite Browser'"
+
+    - name: "Make sure that the static content works"
+      shell: "curl -s http://localhost:8080/static/js/composer.js"
 
     - name: Download a sample graph
       shell: "curl -so out 'http://localhost:8080/render/?width=586&height=308&_salt=1448804805.156&target=carbon.agents.*-a.cache.size'"
@@ -41,7 +60,7 @@
       shell: echo "local.random.diceroll 4711 $(date +%s)" | nc -w 2 0.0.0.0 2003
 
     - name: Wait 5 sec
-      pause: seconds=5
+      command: sleep 5 # pause failes on centos 7 for some reason
 
     - name: Search for the value from graphite-web
       shell: "curl -s 'http://localhost:8080/render/?_salt=1448817576.96&target=local.random.diceroll&format=csv' | grep ',4711.0'"

@@ -13,6 +13,7 @@
     - name: Debian | Install a few packages for the tests
       apt: name={{ item }}
       with_items:
-        - netcat
         - curl
+        - file
+        - netcat
       when: ansible_os_family == "Debian"
