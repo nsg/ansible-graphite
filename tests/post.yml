@@ -28,6 +28,22 @@
         - uwsgi
         - nginx
 
+    - name: Get sample config file parameters
+      shell: "grep -vE '^#' /opt/graphite/conf/carbon.conf.example | awk -F '=' '/=/{ print $1 }'"
+      register: carbon_conf_example_default_params
+
+    - name: Make sure that we have set all default params in carbon.conf
+      shell: "grep -E '^{{ item }}' /opt/graphite/conf/carbon.conf"
+      with_items: "{{ carbon_conf_example_default_params.stdout_lines }}"
+
+    - name: Get set config file parameters
+      shell: "grep -vE '^#' /opt/graphite/conf/carbon.conf | awk '/=/{ print $1 }'"
+      register: carbon_conf_default_params
+
+    - name: Make sure that carbon.conf is not using params not found in the example file
+      shell: "grep '{{ item }}' /opt/graphite/conf/carbon.conf.example"
+      with_items: "{{ carbon_conf_default_params.stdout_lines }}"
+
     - name: "Make sure we have a Graphite install at localhost:8080"
       shell: "curl -s http://localhost:8080 | grep 'Graphite Browser'"
 
