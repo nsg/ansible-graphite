@@ -24,9 +24,14 @@ server {
   access_log /var/log/nginx/graphite.access.log;
   error_log /var/log/nginx/graphite.error.log;
 
+  location /static {
+    alias /opt/graphite/webapp/content;
+    expires max;
+  }
+
   location / {
-  include uwsgi_params;
-  uwsgi_pass 127.0.0.1:3031;
+    include uwsgi_params;
+    uwsgi_pass 127.0.0.1:3031;
   }
 }
 ```
