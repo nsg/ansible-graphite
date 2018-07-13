@@ -14,6 +14,7 @@ set -e
 test -x {{ graphite_install_path }}/bin/carbon-cache.py || exit 0
 
 umask 022
+ulimit -n {{ graphite_service_carbon_open_files_limit }}
 
 . /lib/lsb/init-functions
 

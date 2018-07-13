@@ -10,6 +10,7 @@ Restart=on-failure
 User={{ graphite_user }}
 Group={{ graphite_user }}
 NoNewPrivileges=true
+LimitNOFILE={{ graphite_service_carbon_open_files_limit }}
 
 [Install]
 WantedBy=multi-user.target

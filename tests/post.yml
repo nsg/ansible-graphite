@@ -28,6 +28,9 @@
         - uwsgi
         - nginx
 
+    - name: Make sure that the carbon-cache process has the expected open file limit
+      shell: "test $(awk '/^Max open files/ { print $4 }' /proc/$(pidof -x carbon-cache.py)/limits) -eq 4096"
+
     - name: Get sample config file parameters
       shell: "grep -vE '^#' /opt/graphite/conf/carbon.conf.example | awk -F '=' '/=/{ print $1 }'"
       register: carbon_conf_example_default_params

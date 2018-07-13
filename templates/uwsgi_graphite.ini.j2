@@ -1,5 +1,5 @@
 [uwsgi]
-processes = 2
+processes = {{ uwsgi_graphite_processes }}
 socket = {{ uwsgi_graphite_socket }}
 gid = {{ graphite_user }}
 uid = {{ graphite_user }}

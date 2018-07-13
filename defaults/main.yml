@@ -13,6 +13,8 @@ graphite_admin_last_login: "2014-07-21T10:11:17.464"
 graphite_admin_username: admin
 graphite_admin_password: admin
 
+graphite_service_carbon_open_files_limit: 4096
+
 # The default is "60s:1d" (1 day data), this will keep data for 5 years.
 # If you log a lot of data, you may need to restrict this to a shorter time.
 graphite_storage_schemas_default_retentions: "10s:14d,1m:90d,30m:1y,1h:5y"
@@ -108,6 +110,7 @@ graphite_aggregator_write_back_frequency: 0
 
 # Optional extra options for uwsgi_graphite.ini
 uwsgi_graphite_extraopts: []
+uwsgi_graphite_processes: 2
 uwsgi_graphite_socket: '127.0.0.1:3031'
 
 graphite_install_path: "/opt/graphite"
