@@ -112,6 +112,8 @@ graphite_aggregator_use_whitelist: false
 # graphite_aggregator_user:
 graphite_aggregator_write_back_frequency: 0
 
+graphite_cluster_servers: []
+
 # Optional extra options for uwsgi_graphite.ini
 uwsgi_graphite_extraopts: []
 uwsgi_graphite_processes: 2
