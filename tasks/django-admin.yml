@@ -43,7 +43,7 @@
   template:
     src: createsuperuser.py.j2
     dest: /tmp/createsuperuser.py
-  when: superuser_created|changed
+  when: superuser_created is changed
   register: debug2
 
 - name: django-admin.py - Set superuser password
@@ -55,10 +55,10 @@
     PYTHONPATH: "{{ graphite_install_path}}/webapp/"
   become: yes
   become_user: "{{ graphite_user }}"
-  when: superuser_created|changed
+  when: superuser_created is changed
 
 - name: django-admin.py - Create lock file
   file:
     path: "{{ graphite_install_path }}/webapp/graphite/.superuser_created"
     state: touch
-  when: superuser_created|changed
+  when: superuser_created is changed

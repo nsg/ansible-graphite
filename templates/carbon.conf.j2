@@ -48,7 +48,7 @@ MANHOLE_PORT = {{ graphite_cache_manhole_port }}
 MANHOLE_USER = {{ graphite_cache_manhole_user }}
 MANHOLE_PUBLIC_KEY = {{ graphite_cache_manhole_public_key }}
 BIND_PATTERNS = {{ graphite_cache_bind_patterns }}
-{% if graphite_install_version|version_compare('1.1.3', '>=') and graphite_cache_graphite_url %}
+{% if graphite_install_version is version_compare('1.1.3', '>=') and graphite_cache_graphite_url %}
 GRAPHITE_URL = {{ graphite_cache_graphite_url }}
 {% endif %}
 
