@@ -25,7 +25,9 @@
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
   register: graphite_installed_new
-  notify: restart carbon
+  notify:
+    - restart carbon-cache
+    - restart carbon-relay
   when: >
     ansible_distribution_release == "xenial"
     or ansible_distribution_release == "stretch"
@@ -37,7 +39,9 @@
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
   register: graphite_installed_old
-  notify: restart carbon
+  notify:
+    - restart carbon-cache
+    - restart carbon-relay
   when: >
     ansible_distribution_release != "xenial"
     and ansible_distribution_release != "stretch"
@@ -54,25 +58,33 @@
   template:
     src: local_settings.py.j2
     dest: "{{ graphite_install_path }}/webapp/graphite/local_settings.py"
-  notify: restart carbon
+  notify:
+    - restart carbon-cache
+    - restart carbon-relay
 
 - name: Install carbon settings
   template:
     src: carbon.conf.j2
     dest: "{{ graphite_install_path }}/conf/carbon.conf"
-  notify: restart carbon
+  notify:
+    - restart carbon-cache
+    - restart carbon-relay
 
 - name: Install relay rules
   template:
     src: relay-rules.conf.j2
     dest: "{{ graphite_install_path }}/conf/relay-rules.conf"
-  notify: restart carbon
+  notify:
+    - restart carbon-cache
+    - restart carbon-relay
 
 - name: Install storage schemas
   template:
     src: storage-schemas.conf.j2
     dest: "{{ graphite_install_path }}/conf/storage-schemas.conf"
-  notify: restart carbon
+  notify:
+    - restart carbon-cache
+    - restart carbon-relay
 
 - name: Install 0.9 uwsgi configuration
   template:
