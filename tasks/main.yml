@@ -28,7 +28,8 @@
     - restart carbon-cache
     - restart carbon-relay
   when: >
-    ansible_distribution_release == "xenial"
+    ansible_distribution_release == "bionic"
+    or ansible_distribution_release == "xenial"
     or ansible_distribution_release == "stretch"
 
 - name: Setup graphite with pip
@@ -41,7 +42,8 @@
     - restart carbon-cache
     - restart carbon-relay
   when: >
-    ansible_distribution_release != "xenial"
+    ansible_distribution_release != "bionic"
+    and ansible_distribution_release != "xenial"
     and ansible_distribution_release != "stretch"
 
 - name: Set perms for graphite storage
