@@ -17,6 +17,9 @@ UDP_RECEIVER_INTERFACE = {{ graphite_cache_udp_receiver_interface }}
 UDP_RECEIVER_PORT = {{ graphite_cache_udp_receiver_port }}
 PICKLE_RECEIVER_INTERFACE = {{ graphite_cache_pickle_receiver_interface }}
 PICKLE_RECEIVER_PORT = {{ graphite_cache_pickle_receiver_port }}
+{% if graphite_install_version is version_compare('1.1.5', '>=') and graphite_cache_graphite_url %}
+PICKLE_RECEIVER_MAX_LENGTH = {{ graphite_cache_pickle_receiver_max_length }}
+{% endif %}
 USE_INSECURE_UNPICKLER = {{ graphite_cache_use_insecure_unpickler }}
 CACHE_QUERY_INTERFACE = {{ graphite_cache_cache_query_interface }}
 CACHE_QUERY_PORT = {{ graphite_cache_cache_query_port }}
@@ -60,6 +63,9 @@ LINE_RECEIVER_INTERFACE = {{ graphite_relay_line_receiver_interface }}
 LINE_RECEIVER_PORT = {{ graphite_relay_line_receiver_port }}
 PICKLE_RECEIVER_INTERFACE = {{ graphite_relay_pickle_receiver_interface }}
 PICKLE_RECEIVER_PORT = {{ graphite_relay_pickle_receiver_port }}
+{% if graphite_install_version is version_compare('1.1.5', '>=') and graphite_cache_graphite_url %}
+PICKLE_RECEIVER_MAX_LENGTH = {{ graphite_relay_pickle_receiver_max_length }}
+{% endif %}
 RELAY_METHOD = {{ graphite_relay_relay_method }}
 REPLICATION_FACTOR = {{ graphite_relay_replication_factor }}
 DESTINATIONS = {{ graphite_relay_destinations }}

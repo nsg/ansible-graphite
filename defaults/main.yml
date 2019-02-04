@@ -62,6 +62,7 @@ graphite_cache_max_updates_per_second_on_shutdown: 1000
 graphite_cache_min_timestamp_resolution: 1
 graphite_cache_pickle_receiver_interface: 0.0.0.0
 graphite_cache_pickle_receiver_port: 2004
+graphite_cache_pickle_receiver_max_length: 1048576
 graphite_cache_udp_receiver_interface: 0.0.0.0
 graphite_cache_udp_receiver_port: 2003
 graphite_cache_graphite_url: false  # Set to http://my-graphite-url:port
@@ -79,6 +80,7 @@ graphite_relay_carbon_metric_prefix: carbon
 graphite_relay_destinations: 127.0.0.1:2004
 graphite_relay_line_receiver_interface: 0.0.0.0
 graphite_relay_line_receiver_port: 2013
+graphite_relay_pickle_receiver_max_length: 1048576
 graphite_relay_max_datapoints_per_message: 500
 graphite_relay_max_queue_size: 10000
 graphite_relay_min_reset_interval: 121
