@@ -19,27 +19,31 @@
 # ref: https://github.com/graphite-project/graphite-web/issues/1508
 - name: Setup graphite with pip
   pip:
-    name: "{{ item }}"
+    name: "{{ graphite_install_requirements[graphite_install_version] }}"
     extra_args: "--no-binary=:all:"
-  with_items: "{{ graphite_install_requirements[graphite_install_version] }}"
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
   register: graphite_installed_new
-  notify: restart carbon-cache
+  notify:
+    - restart carbon-cache
+    - restart carbon-relay
   when: >
-    ansible_distribution_release == "xenial"
+    ansible_distribution_release == "bionic"
+    or ansible_distribution_release == "xenial"
     or ansible_distribution_release == "stretch"
 
 - name: Setup graphite with pip
   pip:
-    name: "{{ item }}"
-  with_items: "{{ graphite_install_requirements[graphite_install_version] }}"
+    name: "{{ graphite_install_requirements[graphite_install_version] }}"
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
   register: graphite_installed_old
-  notify: restart carbon-cache
+  notify:
+    - restart carbon-cache
+    - restart carbon-relay
   when: >
-    ansible_distribution_release != "xenial"
+    ansible_distribution_release != "bionic"
+    and ansible_distribution_release != "xenial"
     and ansible_distribution_release != "stretch"
 
 - name: Set perms for graphite storage
@@ -48,47 +52,61 @@
     owner: "{{ graphite_user }}"
     recurse: yes
     state: directory
-  when: graphite_installed_old|changed or graphite_installed_new|changed
+  when: graphite_installed_old is changed or graphite_installed_new is changed
 
 - name: Install webapp settings
   template:
     src: local_settings.py.j2
     dest: "{{ graphite_install_path }}/webapp/graphite/local_settings.py"
-  notify: restart carbon-cache
+  notify:
+    - restart carbon-cache
+    - restart carbon-relay
 
 - name: Install carbon settings
   template:
     src: carbon.conf.j2
     dest: "{{ graphite_install_path }}/conf/carbon.conf"
-  notify: restart carbon-cache
+  notify:
+    - restart carbon-cache
+    - restart carbon-relay
+
+- name: Install relay rules
+  template:
+    src: relay-rules.conf.j2
+    dest: "{{ graphite_install_path }}/conf/relay-rules.conf"
+  notify:
+    - restart carbon-cache
+    - restart carbon-relay
 
 - name: Install storage schemas
   template:
     src: storage-schemas.conf.j2
     dest: "{{ graphite_install_path }}/conf/storage-schemas.conf"
-  notify: restart carbon-cache
+  notify:
+    - restart carbon-cache
+    - restart carbon-relay
 
 - name: Install 0.9 uwsgi configuration
   template:
     src: wsgi.py.j2
     dest: "{{ graphite_install_path }}/conf/wsgi.py"
   notify: restart uwsgi
-  when:  graphite_install_version | version_compare("1.0.0", "<")
+  when:  graphite_install_version is version_compare("1.0.0", "<")
 
 - name: Install 1.0 uwsgi configuration
   template:
     src: wsgi-1.0.x.py.j2
     dest: "{{ graphite_install_path }}/conf/wsgi.py"
   notify: restart uwsgi
-  when:  graphite_install_version | version_compare("1.0.0", ">=")
+  when:  graphite_install_version is version_compare("1.0.0", ">=")
 
 - name: Use manage.py to run configuration tasks
   include: manage.yml
-  when: graphite_install_version | version_compare("1.0.2", "<")
+  when: graphite_install_version is version_compare("1.0.2", "<")
 
 - name: Use django-admin.py to run configuration tasks
   include: django-admin.yml
-  when: graphite_install_version | version_compare("1.0.2", ">=")
+  when: graphite_install_version is version_compare("1.0.2", ">=")
 
 - name: Remove temp file
   file:
@@ -99,8 +117,16 @@
   service:
     name: uwsgi
     enabled: yes
+  when: graphite_enable_uwsgi
 
 - name: Enable carbon-cache service
   service:
     name: carbon-cache
     enabled: yes
+  when: graphite_enable_carbon_cache
+
+- name: Enable carbon-relay service
+  service:
+    name: carbon-relay
+    enabled: yes
+  when: graphite_enable_carbon_relay

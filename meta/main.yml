@@ -4,7 +4,7 @@ galaxy_info:
   description: Graphite ansible role
   company:
   license: MIT
-  min_ansible_version: 2.4.4
+  min_ansible_version: 2.5.9
   platforms:
     - name: EL
       versions:
@@ -27,8 +27,8 @@ galaxy_info:
     #   - 13.2
     - name: Ubuntu
       versions:
-        - trusty
         - xenial
+        - bionic
     - name: Debian
       versions:
         - jessie

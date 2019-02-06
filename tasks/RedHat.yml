@@ -6,18 +6,19 @@
 
 - name: Install packages with yum
   yum:
-    name: "{{ item }}"
-  with_items:
-    - python-pip
-    - python-devel
-    - gcc
-    - cairo-devel
-    - pycairo
-    - bitmap-fonts-compat
-    - libselinux-python
-    - fontconfig
-    - sudo
-    - libffi-devel
+    name: "{{ packages }}"
+  vars:
+    packages:
+      - python-pip
+      - python-devel
+      - gcc
+      - cairo-devel
+      - pycairo
+      - bitmap-fonts-compat
+      - libselinux-python
+      - fontconfig
+      - sudo
+      - libffi-devel
 
 - name: Install uwsgi with pip
   pip:
@@ -25,14 +26,25 @@
 
 - name: Install systemd unit carbon-cache.service
   template:
-    src: carbon_service_systemd.j2
+    src: carbon_cache_systemd.j2
     dest: /etc/systemd/system/carbon-cache.service
   register: ccunit
 
 - name: Reload systemd if unit file has changed
   shell: systemctl daemon-reload
-  when: ccunit|changed
+  when: ccunit is changed
   notify: restart carbon-cache
+
+- name: Install systemd unit carbon-relay.service
+  template:
+    src: carbon_relay_systemd.j2
+    dest: /etc/systemd/system/carbon-relay.service
+  register: ccunit
+
+- name: Reload systemd if unit file has changed
+  shell: systemctl daemon-reload
+  when: ccunit is changed
+  notify: restart carbon-relay
 
 - name: Install uwsgi default settings
   template:
@@ -54,5 +66,5 @@
 
 - name: Reload systemd if unit file has changed
   shell: systemctl daemon-reload
-  when: uwsgiunit|changed
+  when: uwsgiunit is changed
   notify: restart uwsgi
